@@ -13,3 +13,4 @@
 .externalNativeBuild
 .cxx
 local.properties
+/movies-data/src/main/java/com/example/movies_data/ApiKeyProviderImpl.kt
