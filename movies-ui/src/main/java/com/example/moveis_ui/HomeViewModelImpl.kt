@@ -15,8 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModelImpl @Inject constructor(
-    private val getNowShowingMoviesUseCase: GetNowShowingMoviesUseCase//,
-   // private val _nowShowingFlow: MutableStateFlow<HomeNowShowingState>
+    private val getNowShowingMoviesUseCase: GetNowShowingMoviesUseCase
 ): ViewModel(), HomeViewModel {
     private val _nowShowingFlow = MutableStateFlow<HomeNowShowingState>(HomeNowShowingState.Loading)
     override val nowShowingFlow: StateFlow<HomeNowShowingState>

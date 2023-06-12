@@ -24,6 +24,10 @@ class UpcomingViewModel @Inject constructor(
         get() = _seeAllUpcomingFlow
 
     init {
+        initialize()
+    }
+
+    fun initialize() {
         Log.v("UpcomingViewModel", "init")
         viewModelScope.launch(CoroutineExceptionHandler {
                 coroutineContext, throwable ->
@@ -36,9 +40,9 @@ class UpcomingViewModel @Inject constructor(
                 _seeAllUpcomingFlow.value = SeeAllState.Ready(movies)
             }
         }.invokeOnCompletion {
-            if (it?.cause !is CancellationException) {
+            if (it !=null && it.cause !is CancellationException) {
                 _seeAllUpcomingFlow.value = SeeAllState.Error
-           }
+            }
             Log.v("UpcomingViewModel", "completion: ${it?.message}")
         }
     }

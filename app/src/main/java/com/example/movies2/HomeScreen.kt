@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -81,7 +82,7 @@ fun HomeSection(
                     modifier = modifier
                 ) {
                     items(state.movies.size) {
-                        MoviePosterImageItem(state.movies[it])
+                        MoviePosterImageItem(state.movies[it], Modifier.size(width = 120.dp, height = 180.dp))
                     }
                 }
                 TextButton(
@@ -112,20 +113,14 @@ fun HomeSection(
 }
 
 @Composable
-fun MoviePosterImageItem(item: MovieEntity) {
-    Surface(Modifier.size(width = 120.dp, height = 180.dp), RoundedCornerShape(4.dp)) {
+fun MoviePosterImageItem(item: MovieEntity, modifier: Modifier = Modifier) {
+    Surface(modifier, RoundedCornerShape(4.dp)) {
         val painter = rememberAsyncImagePainter(item.posterPath)
-//        val painter = rememberAsyncImagePainter(
-//            ImageRequest.Builder(LocalContext.current).data(data = item.posterPath)
-//                .apply(block = fun ImageRequest.Builder.() {
-//                    crossfade(true)
-//                }).build()
-//        )
         Image(
             painter = painter,
             contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Fit,
+            modifier = Modifier.fillMaxWidth(),
         )
     }
 }

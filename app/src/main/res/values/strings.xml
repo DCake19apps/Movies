@@ -6,4 +6,5 @@
     <string name="top_rated">Top Rated</string>
     <string name="see_all">See all</string>
     <string name="error_loading">Error loading</string>
+    <string name="retry">Retry</string>
 </resources>
