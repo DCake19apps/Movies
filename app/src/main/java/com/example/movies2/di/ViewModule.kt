@@ -1,19 +1,8 @@
 package com.example.movies2.di
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.createSavedStateHandle
-import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.moveis_ui.HomeNowShowingState
-import com.example.moveis_ui.HomeViewModel
-import com.example.moveis_ui.HomeViewModelImpl
-import com.example.movie_domain.GetNowShowingMoviesUseCase
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
-import dagger.hilt.android.scopes.ActivityRetainedScoped
-import kotlinx.coroutines.flow.MutableStateFlow
 
 @InstallIn(ActivityRetainedComponent::class)
 @Module

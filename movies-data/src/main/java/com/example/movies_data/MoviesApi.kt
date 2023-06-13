@@ -16,4 +16,16 @@ interface MoviesApi {
         @Query("api_key") apiKey: String,
         @Query("page") pageNumber: Int
     ): MoviesListResult
+
+    @GET("/3/movie/top_rated")
+    suspend fun getTopRated(
+        @Query("api_key") apiKey: String,
+        @Query("page") pageNumber: Int
+    ): MoviesListResult
+
+    @GET("/3/movie/popular")
+    suspend fun getPopular(
+        @Query("api_key") apiKey: String,
+        @Query("page") pageNumber: Int
+    ): MoviesListResult
 }

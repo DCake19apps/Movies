@@ -3,31 +3,44 @@ package com.example.movies_data
 import com.example.movie_domain.MovieEntity
 import com.example.movie_domain.MoviesRepository
 import com.example.movies_data.cache.MoviesCache
-import kotlinx.coroutines.coroutineScope
 
 class MoviesRepositoryImpl(
     private val apiKeyProvider: ApiKeyProvider,
     private val api: MoviesApi,
     private val cache: MoviesCache,
     private val mapper: MoviesMapper,
-    private val upcomingDataRetriever: DataRetriever<List<MovieEntity>>
+    private val nowPlayingDataRetriever: DataRetriever<List<MovieEntity>>,
+    private val upcomingDataRetriever: DataRetriever<List<MovieEntity>>,
+    private val topRatedDataRetriever: DataRetriever<List<MovieEntity>>,
+    private val popularDataRetriever: DataRetriever<List<MovieEntity>>
     ): MoviesRepository {
 
     override suspend fun getNowShowing(): List<MovieEntity> {
-        return coroutineScope {
-            mapper.map(api.getNowPlaying(apiKeyProvider.getApiKey(), 1))
-        }
+        return nowPlayingDataRetriever.get{ retrieve(MovieListType.NOW_PLAYING) }
     }
 
     override suspend fun getUpcoming(): List<MovieEntity> {
-        return upcomingDataRetriever.get{ retrieve() }
+        return upcomingDataRetriever.get{ retrieve(MovieListType.UPCOMING) }
     }
 
-    private suspend fun retrieve(): List<MovieEntity> {
-        val cachedMovies = cache.get()
+    override suspend fun getTopRated(): List<MovieEntity> {
+        return topRatedDataRetriever.get{ retrieve(MovieListType.TOP_RATED) }
+    }
+
+    override suspend fun getPopular(): List<MovieEntity> {
+        return popularDataRetriever.get{ retrieve(MovieListType.POPULAR) }
+    }
+
+    private suspend fun retrieve(type: MovieListType): List<MovieEntity> {
+        val cachedMovies = cache.get(type)
         return if (cachedMovies == null) {
-            val apiMovies = api.getUpcoming(apiKeyProvider.getApiKey(), 1)
-            cache.save(apiMovies)
+            val apiMovies = when(type) {
+                MovieListType.NOW_PLAYING -> api.getNowPlaying(apiKeyProvider.getApiKey(), 1)
+                MovieListType.UPCOMING -> api.getUpcoming(apiKeyProvider.getApiKey(), 1)
+                MovieListType.POPULAR -> api.getPopular(apiKeyProvider.getApiKey(), 1)
+                MovieListType.TOP_RATED -> api.getTopRated(apiKeyProvider.getApiKey(), 1)
+            }
+            cache.save(type, apiMovies)
             mapper.map(apiMovies)
         } else {
             mapper.map(cachedMovies)

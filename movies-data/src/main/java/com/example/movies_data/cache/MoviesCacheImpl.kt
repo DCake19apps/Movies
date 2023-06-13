@@ -1,18 +1,19 @@
 package com.example.movies_data.cache
 
+import com.example.movies_data.MovieListType
 import com.example.movies_data.apipojo.MoviesListResult
 
 class MoviesCacheImpl(): MoviesCache {
 
-    private var moviesResult: MoviesListResult? = null
+    private val moviesResults = hashMapOf<MovieListType, MoviesListResult>()
 
-    override fun save(moviesResult: MoviesListResult) {
+    override fun save(type: MovieListType, moviesResult: MoviesListResult) {
         println("Upcoming: cache-save")
-        this.moviesResult = moviesResult
+        moviesResults[type] = moviesResult
     }
 
-    override fun get(): MoviesListResult? {
-        println("Upcoming: cache-get: empty: ${moviesResult == null}")
-        return moviesResult
+    override fun get(type: MovieListType): MoviesListResult? {
+        println("Upcoming: cache-get: empty: ${moviesResults[type] == null}")
+        return moviesResults[type]
     }
 }

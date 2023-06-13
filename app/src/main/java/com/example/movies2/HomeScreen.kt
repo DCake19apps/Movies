@@ -1,12 +1,10 @@
 package com.example.movies2
 
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,23 +24,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.moveis_ui.HomeNowShowingState
-import com.example.moveis_ui.HomeViewModel
+import com.example.moveis_ui.HomeState
 import com.example.moveis_ui.HomeViewModelImpl
 import com.example.movie_domain.MovieEntity
 import com.example.movies2.ui.theme.MoviesTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
 import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
 
 @Composable
 fun HomeScreen(
@@ -51,10 +43,28 @@ fun HomeScreen(
     onClickSeeAllNowShowing: () -> Unit = {}
 ) {
     val nowShowing by viewModel.nowShowingFlow.collectAsState()
+    val upcoming by viewModel.upcomingFlow.collectAsState()
+    val topRated by viewModel.topRatedFlow.collectAsState()
+    val popular by viewModel.popularFlow.collectAsState()
     Column(modifier.verticalScroll(rememberScrollState())) {
         HomeSection(
             title = R.string.now_showing,
             state = nowShowing,
+            onClickSeeAll = onClickSeeAllNowShowing
+        )
+        HomeSection(
+            title = R.string.upcoming,
+            state = upcoming,
+            onClickSeeAll = onClickSeeAllNowShowing
+        )
+        HomeSection(
+            title = R.string.top_rated,
+            state = topRated,
+            onClickSeeAll = onClickSeeAllNowShowing
+        )
+        HomeSection(
+            title = R.string.popular,
+            state = popular,
             onClickSeeAll = onClickSeeAllNowShowing
         )
     }
@@ -63,7 +73,7 @@ fun HomeScreen(
 @Composable
 fun HomeSection(
     @StringRes title: Int,
-    state: HomeNowShowingState,
+    state: HomeState,
     modifier: Modifier = Modifier,
     onClickSeeAll: () -> Unit = {}
 ) {
@@ -75,7 +85,7 @@ fun HomeSection(
                 .padding(8.dp)
         )
         when (state)  {
-            is HomeNowShowingState.Ready -> {
+            is HomeState.Ready -> {
                 LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(horizontal = 16.dp),
@@ -93,14 +103,14 @@ fun HomeSection(
                 }
             }
 
-            HomeNowShowingState.Error -> {
+            HomeState.Error -> {
                 Text(
                     text = stringResource(id = R.string.error_loading),
                     modifier = Modifier.padding(32.dp)
                         .align(Alignment.CenterHorizontally)
                 )
             }
-            HomeNowShowingState.Loading -> {
+            HomeState.Loading -> {
                 CircularProgressIndicator(
                     modifier = Modifier.padding(16.dp)
                         .height(60.dp)
@@ -131,7 +141,7 @@ fun HomeSectionPreview() {
     MoviesTheme {
         HomeSection(
             R.string.now_showing,
-            HomeNowShowingState.Ready((0..4).map {
+            HomeState.Ready((0..4).map {
                 MovieEntity(it,"","","","","") })
         )
     }

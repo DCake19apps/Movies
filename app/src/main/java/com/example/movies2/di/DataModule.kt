@@ -21,7 +21,16 @@ class DataModule {
     @Singleton
     @Provides
     fun provideMoviesRepository(moviesApi: MoviesApi, cache: MoviesCache): MoviesRepository {
-        return MoviesRepositoryImpl(ApiKeyProviderImpl(),moviesApi, cache, MoviesMapperImpl(), DataRetriever())
+        return MoviesRepositoryImpl(
+            ApiKeyProviderImpl(),
+            moviesApi,
+            cache,
+            MoviesMapperImpl(),
+            DataRetriever(),
+            DataRetriever(),
+            DataRetriever(),
+            DataRetriever()
+        )
     }
 
     @Singleton
