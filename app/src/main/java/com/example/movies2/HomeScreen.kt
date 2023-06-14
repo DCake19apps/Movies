@@ -40,7 +40,10 @@ import coil.compose.rememberAsyncImagePainter
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModelImpl = hiltViewModel(),
-    onClickSeeAllNowShowing: () -> Unit = {}
+    onClickSeeAllNowPlaying: () -> Unit = {},
+    onClickSeeAllUpcoming: () -> Unit = {},
+    onClickSeeAllTopRated: () -> Unit = {},
+    onClickSeeAllPopular: () -> Unit = {}
 ) {
     val nowShowing by viewModel.nowShowingFlow.collectAsState()
     val upcoming by viewModel.upcomingFlow.collectAsState()
@@ -50,22 +53,22 @@ fun HomeScreen(
         HomeSection(
             title = R.string.now_showing,
             state = nowShowing,
-            onClickSeeAll = onClickSeeAllNowShowing
+            onClickSeeAll = onClickSeeAllNowPlaying
         )
         HomeSection(
             title = R.string.upcoming,
             state = upcoming,
-            onClickSeeAll = onClickSeeAllNowShowing
+            onClickSeeAll = onClickSeeAllUpcoming
         )
         HomeSection(
             title = R.string.top_rated,
             state = topRated,
-            onClickSeeAll = onClickSeeAllNowShowing
+            onClickSeeAll = onClickSeeAllTopRated
         )
         HomeSection(
             title = R.string.popular,
             state = popular,
-            onClickSeeAll = onClickSeeAllNowShowing
+            onClickSeeAll = onClickSeeAllPopular
         )
     }
 }

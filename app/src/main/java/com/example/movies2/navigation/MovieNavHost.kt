@@ -20,13 +20,31 @@ fun MovieNavHost(
     ) {
         composable(route = MoviesDestination.HOME) {
             HomeScreen(
-                onClickSeeAllNowShowing = {
+                onClickSeeAllNowPlaying = {
                     navController.navigateSingleTopTo(MoviesDestination.NOW_SHOWING)
+                },
+                onClickSeeAllUpcoming = {
+                    navController.navigateSingleTopTo(MoviesDestination.UPCOMING)
+                },
+                onClickSeeAllTopRated = {
+                    navController.navigateSingleTopTo(MoviesDestination.TOP_RATED)
+                },
+                onClickSeeAllPopular = {
+                    navController.navigateSingleTopTo(MoviesDestination.POPULAR)
                 }
             )
         }
         composable(route = MoviesDestination.NOW_SHOWING) {
-            SeeAllScreen()
+            SeeAllNowPlayingScreen()
+        }
+        composable(route = MoviesDestination.UPCOMING) {
+            SeeAllUpcomingScreen()
+        }
+        composable(route = MoviesDestination.TOP_RATED) {
+            SeeAllTopRatedScreen()
+        }
+        composable(route = MoviesDestination.POPULAR) {
+            SeeAllPopularScreen()
         }
     }
 }

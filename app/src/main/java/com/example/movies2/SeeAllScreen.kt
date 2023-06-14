@@ -12,7 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.moveis_ui.UpcomingViewModel
+import com.example.moveis_ui.seeall.UpcomingViewModel
 import com.example.movies2.ui.theme.MoviesTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.dp
@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -33,36 +32,50 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.res.stringResource
-import com.example.moveis_ui.HomeViewModel
-import com.example.moveis_ui.HomeViewModelImpl
 import com.example.movie_domain.MovieEntity
-import com.example.movies2.ui.theme.MoviesTheme
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
-import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
-
+import com.example.moveis_ui.seeall.NowPlayingViewModel
+import com.example.moveis_ui.seeall.PopularViewModel
+import com.example.moveis_ui.seeall.TopRatedViewModel
 
 @Composable
-fun SeeAllScreen(
+fun SeeAllNowPlayingScreen(
+    modifier: Modifier = Modifier,
+    viewModel: NowPlayingViewModel = hiltViewModel(),
+) {
+    val nowPlaying by viewModel.seeAllNowPlayingFlow.collectAsState()
+    MoviesGridList(state = nowPlaying, onClickRetry = { viewModel.initialize() })
+}
+@Composable
+fun SeeAllUpcomingScreen(
     modifier: Modifier = Modifier,
     viewModel: UpcomingViewModel = hiltViewModel(),
 ) {
     val upcoming by viewModel.seeAllUpcomingFlow.collectAsState()
-    MoviesGridList(state = upcoming, viewModel = viewModel)
-    
+    MoviesGridList(state = upcoming, onClickRetry = { viewModel.initialize() })
 }
-
 @Composable
-fun MoviesGridList(state: SeeAllState, viewModel: UpcomingViewModel = hiltViewModel()) {
+fun SeeAllTopRatedScreen(
+    modifier: Modifier = Modifier,
+    viewModel: TopRatedViewModel = hiltViewModel(),
+) {
+    val topRated by viewModel.seeAllTopRatedFlow.collectAsState()
+    MoviesGridList(state = topRated, onClickRetry = { viewModel.initialize() })
+}
+@Composable
+fun SeeAllPopularScreen(
+    modifier: Modifier = Modifier,
+    viewModel: PopularViewModel = hiltViewModel(),
+) {
+    val popular by viewModel.seeAllPopularFlow.collectAsState()
+    MoviesGridList(state = popular, onClickRetry = { viewModel.initialize() })
+}
+@Composable
+fun MoviesGridList(state: SeeAllState, onClickRetry: () -> Unit = {}) {
 
     when (state) {
         SeeAllState.Error -> {
-            ShowAllError(onClickRetry = { viewModel.initialize() })
+            ShowAllError(onClickRetry = onClickRetry)
             Log.v("Upcoming","error")
         }
         SeeAllState.Loading -> {
@@ -70,9 +83,6 @@ fun MoviesGridList(state: SeeAllState, viewModel: UpcomingViewModel = hiltViewMo
         }
         is SeeAllState.Ready -> {
             ShowAllMovies(state.movies)
-            state.movies.take(3).forEach {
-                Log.v("Upcoming", it.title)
-            }
         }
     }
 }
@@ -135,6 +145,6 @@ fun ShowAllMovies(movies: List<MovieEntity>, modifier: Modifier = Modifier) {
 @Composable
 fun FullListPreview() {
     MoviesTheme {
-        SeeAllScreen()
+        SeeAllUpcomingScreen()
     }
 }

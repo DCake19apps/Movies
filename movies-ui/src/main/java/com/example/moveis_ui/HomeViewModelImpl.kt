@@ -3,14 +3,13 @@ package com.example.moveis_ui
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.movie_domain.GetNowShowingMoviesUseCase
+import com.example.movie_domain.GetNowPlayingMoviesUseCase
 import com.example.movie_domain.GetPopularMoviesUseCase
 import com.example.movie_domain.GetTopRatedMoviesUseCase
 import com.example.movie_domain.GetUpcomingMoviesUseCase
 import com.example.movie_domain.MovieEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModelImpl @Inject constructor(
-    private val getNowShowingMoviesUseCase: GetNowShowingMoviesUseCase,
+    private val getNowPlayingMoviesUseCase: GetNowPlayingMoviesUseCase,
     private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase,
     private val getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase,
     private val getPopularMoviesUseCase: GetPopularMoviesUseCase
@@ -54,7 +53,7 @@ class HomeViewModelImpl @Inject constructor(
 //            }
 //        }
 
-        launch(_nowShowingFlow) { getNowShowingMoviesUseCase.invoke() }
+        launch(_nowShowingFlow) { getNowPlayingMoviesUseCase.invoke() }
         launch(_upcomingFlow) { getUpcomingMoviesUseCase.invoke() }
         launch(_topRatedFlow) { getTopRatedMoviesUseCase.invoke() }
         launch(_popularFlow) { getPopularMoviesUseCase.invoke() }
@@ -62,12 +61,14 @@ class HomeViewModelImpl @Inject constructor(
     }
 
     private fun launch(flow: MutableStateFlow<HomeState>, get: suspend () -> List<MovieEntity>) {
-        CoroutineScope(Dispatchers.Default).launch(CoroutineExceptionHandler {
+        viewModelScope.launch(CoroutineExceptionHandler {
                 coroutineContext, throwable ->
             flow.value = HomeState.Error
         }) {
-            val movies = get()
-            flow.value = HomeState.Ready(movies)
+            withContext(Dispatchers.Default) {
+                val movies = get()
+                flow.value = HomeState.Ready(movies)
+            }
         }.invokeOnCompletion {
             if (it !=null && it.cause !is CancellationException) {
                 flow.value = HomeState.Error

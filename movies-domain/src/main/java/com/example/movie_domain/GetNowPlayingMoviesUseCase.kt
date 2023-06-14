@@ -1,5 +1,5 @@
 package com.example.movie_domain
 
-interface GetNowShowingMoviesUseCase {
+interface GetNowPlayingMoviesUseCase {
     suspend fun invoke(): List<MovieEntity>
 }

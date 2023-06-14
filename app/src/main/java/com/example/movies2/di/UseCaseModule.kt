@@ -1,7 +1,7 @@
 package com.example.movies2.di
 
-import com.example.movie_domain.GetNowShowingMoviesUseCase
-import com.example.movie_domain.GetNowShowingMoviesUseCaseImpl
+import com.example.movie_domain.GetNowPlayingMoviesUseCase
+import com.example.movie_domain.GetNowPlayingMoviesUseCaseImpl
 import com.example.movie_domain.GetPopularMoviesUseCase
 import com.example.movie_domain.GetPopularMoviesUseCaseImpl
 import com.example.movie_domain.GetTopRatedMoviesUseCase
@@ -21,8 +21,8 @@ class UseCaseModule {
 
     @Singleton
     @Provides
-    fun provideGetNowShowingUseCase(repository: MoviesRepository): GetNowShowingMoviesUseCase {
-        return GetNowShowingMoviesUseCaseImpl(repository)
+    fun provideGetNowShowingUseCase(repository: MoviesRepository): GetNowPlayingMoviesUseCase {
+        return GetNowPlayingMoviesUseCaseImpl(repository)
     }
 
     @Singleton
