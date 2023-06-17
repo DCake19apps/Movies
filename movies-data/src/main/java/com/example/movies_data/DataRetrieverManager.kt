@@ -9,11 +9,10 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
 
-class DataRetriever<T> (private val dispatcher: CoroutineDispatcher = Dispatchers.IO) {
+class DataRetrieverManager<T> (private val dispatcher: CoroutineDispatcher = Dispatchers.IO) {
 
     private var channel = Channel<T>()
     private var job: Job? = null

@@ -9,26 +9,26 @@ class MoviesRepositoryImpl(
     private val api: MoviesApi,
     private val cache: MoviesCache,
     private val mapper: MoviesMapper,
-    private val nowPlayingDataRetriever: DataRetriever<List<MovieEntity>>,
-    private val upcomingDataRetriever: DataRetriever<List<MovieEntity>>,
-    private val topRatedDataRetriever: DataRetriever<List<MovieEntity>>,
-    private val popularDataRetriever: DataRetriever<List<MovieEntity>>
+    private val nowPlayingDataRetrieverManager: DataRetrieverManager<List<MovieEntity>>,
+    private val upcomingDataRetrieverManager: DataRetrieverManager<List<MovieEntity>>,
+    private val topRatedDataRetrieverManager: DataRetrieverManager<List<MovieEntity>>,
+    private val popularDataRetrieverManager: DataRetrieverManager<List<MovieEntity>>
     ): MoviesRepository {
 
     override suspend fun getNowShowing(): List<MovieEntity> {
-        return nowPlayingDataRetriever.get{ retrieve(MovieListType.NOW_PLAYING) }
+        return nowPlayingDataRetrieverManager.get{ retrieve(MovieListType.NOW_PLAYING) }
     }
 
     override suspend fun getUpcoming(): List<MovieEntity> {
-        return upcomingDataRetriever.get{ retrieve(MovieListType.UPCOMING) }
+        return upcomingDataRetrieverManager.get{ retrieve(MovieListType.UPCOMING) }
     }
 
     override suspend fun getTopRated(): List<MovieEntity> {
-        return topRatedDataRetriever.get{ retrieve(MovieListType.TOP_RATED) }
+        return topRatedDataRetrieverManager.get{ retrieve(MovieListType.TOP_RATED) }
     }
 
     override suspend fun getPopular(): List<MovieEntity> {
-        return popularDataRetriever.get{ retrieve(MovieListType.POPULAR) }
+        return popularDataRetrieverManager.get{ retrieve(MovieListType.POPULAR) }
     }
 
     private suspend fun retrieve(type: MovieListType): List<MovieEntity> {

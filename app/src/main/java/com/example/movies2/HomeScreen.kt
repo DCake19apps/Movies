@@ -28,7 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.moveis_ui.HomeState
-import com.example.moveis_ui.HomeViewModelImpl
+import com.example.moveis_ui.HomeViewModel
 import com.example.movie_domain.MovieEntity
 import com.example.movies2.ui.theme.MoviesTheme
 import androidx.compose.runtime.getValue
@@ -39,7 +39,7 @@ import coil.compose.rememberAsyncImagePainter
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModelImpl = hiltViewModel(),
+    viewModel: HomeViewModel = hiltViewModel(),
     onClickSeeAllNowPlaying: () -> Unit = {},
     onClickSeeAllUpcoming: () -> Unit = {},
     onClickSeeAllTopRated: () -> Unit = {},

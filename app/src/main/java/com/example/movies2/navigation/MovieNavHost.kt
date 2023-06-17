@@ -1,12 +1,90 @@
 package com.example.movies2
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.movies2.navigation.MoviesDestination
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AppScreen(
+    navController: NavHostController,
+    modifier: Modifier = Modifier
+) {
+    Scaffold(bottomBar = {
+        MoviesBottomNavigation(navController, modifier)
+    }) {
+        MovieNavHost(
+            navController = navController,
+            modifier = modifier.padding(it)
+        )
+    }
+}
+
+@Composable
+fun MoviesBottomNavigation(
+    navController: NavHostController,
+    modifier: Modifier = Modifier
+) {
+    BottomNavigation(
+        backgroundColor = MaterialTheme.colors.background,
+        modifier = modifier
+    ) {
+        var state by rememberSaveable { mutableStateOf(MoviesDestination.HOME) }
+
+        BottomNavigationItem(
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Home,
+                    contentDescription = null
+                )
+            },
+            label = {
+                Text(stringResource(R.string.home))
+            },
+            selected = state == MoviesDestination.HOME,
+            onClick = {
+                state = MoviesDestination.HOME
+                navController.navigateSingleTopTo(MoviesDestination.HOME)
+            }
+        )
+        BottomNavigationItem(
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = null
+                )
+            },
+            label = {
+                Text(stringResource(R.string.search))
+            },
+            selected = state == MoviesDestination.SEARCH,
+            onClick = {
+                state = MoviesDestination.SEARCH
+                navController.navigateSingleTopTo(MoviesDestination.SEARCH)
+            }
+        )
+    }
+}
 
 @Composable
 fun MovieNavHost(
@@ -45,6 +123,12 @@ fun MovieNavHost(
         }
         composable(route = MoviesDestination.POPULAR) {
             SeeAllPopularScreen()
+        }
+        composable(route = MoviesDestination.DETAIL) {
+            MovieDetailsScreen()
+        }
+        composable(route = MoviesDestination.SEARCH) {
+            SearchScreen()
         }
     }
 }
