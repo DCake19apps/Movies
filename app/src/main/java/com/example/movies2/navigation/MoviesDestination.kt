@@ -6,6 +6,6 @@ object MoviesDestination {
     const val UPCOMING = "upcoming"
     const val TOP_RATED = "top_rated"
     const val POPULAR = "popular"
-    const val DETAIL = "detail"
+    const val DETAIL = "detail/{movieId}"
     const val SEARCH = "search"
 }

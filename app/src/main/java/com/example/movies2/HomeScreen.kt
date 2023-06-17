@@ -2,6 +2,7 @@ package com.example.movies2
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -43,7 +44,8 @@ fun HomeScreen(
     onClickSeeAllNowPlaying: () -> Unit = {},
     onClickSeeAllUpcoming: () -> Unit = {},
     onClickSeeAllTopRated: () -> Unit = {},
-    onClickSeeAllPopular: () -> Unit = {}
+    onClickSeeAllPopular: () -> Unit = {},
+    onClickItem: (id: Int) -> Unit = {}
 ) {
     val nowShowing by viewModel.nowShowingFlow.collectAsState()
     val upcoming by viewModel.upcomingFlow.collectAsState()
@@ -53,22 +55,26 @@ fun HomeScreen(
         HomeSection(
             title = R.string.now_showing,
             state = nowShowing,
-            onClickSeeAll = onClickSeeAllNowPlaying
+            onClickSeeAll = onClickSeeAllNowPlaying,
+            onClickItem = onClickItem
         )
         HomeSection(
             title = R.string.upcoming,
             state = upcoming,
-            onClickSeeAll = onClickSeeAllUpcoming
+            onClickSeeAll = onClickSeeAllUpcoming,
+            onClickItem = onClickItem
         )
         HomeSection(
             title = R.string.top_rated,
             state = topRated,
-            onClickSeeAll = onClickSeeAllTopRated
+            onClickSeeAll = onClickSeeAllTopRated,
+            onClickItem = onClickItem
         )
         HomeSection(
             title = R.string.popular,
             state = popular,
-            onClickSeeAll = onClickSeeAllPopular
+            onClickSeeAll = onClickSeeAllPopular,
+            onClickItem = onClickItem
         )
     }
 }
@@ -78,7 +84,8 @@ fun HomeSection(
     @StringRes title: Int,
     state: HomeState,
     modifier: Modifier = Modifier,
-    onClickSeeAll: () -> Unit = {}
+    onClickSeeAll: () -> Unit = {},
+    onClickItem: (id: Int) -> Unit = {}
 ) {
     Column(modifier = modifier.fillMaxSize()) {
         Text(
@@ -95,7 +102,11 @@ fun HomeSection(
                     modifier = modifier
                 ) {
                     items(state.movies.size) {
-                        MoviePosterImageItem(state.movies[it], Modifier.size(width = 120.dp, height = 180.dp))
+                        MoviePosterImageItem(
+                            state.movies[it],
+                            Modifier.size(width = 120.dp, height = 180.dp),
+                            onClick = onClickItem
+                        )
                     }
                 }
                 TextButton(
@@ -126,14 +137,18 @@ fun HomeSection(
 }
 
 @Composable
-fun MoviePosterImageItem(item: MovieEntity, modifier: Modifier = Modifier) {
+fun MoviePosterImageItem(
+    item: MovieEntity,
+    modifier: Modifier = Modifier,
+    onClick: (id: Int) -> Unit
+) {
     Surface(modifier, RoundedCornerShape(4.dp)) {
         val painter = rememberAsyncImagePainter(item.posterPath)
         Image(
             painter = painter,
             contentDescription = null,
             contentScale = ContentScale.Fit,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().clickable { onClick(item.id) },
         )
     }
 }

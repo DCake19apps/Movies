@@ -42,36 +42,60 @@ import com.example.moveis_ui.seeall.TopRatedViewModel
 fun SeeAllNowPlayingScreen(
     modifier: Modifier = Modifier,
     viewModel: NowPlayingViewModel = hiltViewModel(),
+    onClickItem: (id: Int) -> Unit = {}
 ) {
     val nowPlaying by viewModel.seeAllNowPlayingFlow.collectAsState()
-    MoviesGridList(state = nowPlaying, onClickRetry = { viewModel.initialize() })
+    MoviesGridList(
+        state = nowPlaying,
+        onClickRetry = { viewModel.initialize() },
+        onClickItem = onClickItem
+    )
 }
 @Composable
 fun SeeAllUpcomingScreen(
     modifier: Modifier = Modifier,
     viewModel: UpcomingViewModel = hiltViewModel(),
+    onClickItem: (id: Int) -> Unit = {}
 ) {
     val upcoming by viewModel.seeAllUpcomingFlow.collectAsState()
-    MoviesGridList(state = upcoming, onClickRetry = { viewModel.initialize() })
+    MoviesGridList(
+        state = upcoming,
+        onClickRetry = { viewModel.initialize() },
+        onClickItem = onClickItem
+    )
 }
 @Composable
 fun SeeAllTopRatedScreen(
     modifier: Modifier = Modifier,
     viewModel: TopRatedViewModel = hiltViewModel(),
+    onClickItem: (id: Int) -> Unit = {}
 ) {
     val topRated by viewModel.seeAllTopRatedFlow.collectAsState()
-    MoviesGridList(state = topRated, onClickRetry = { viewModel.initialize() })
+    MoviesGridList(
+        state = topRated,
+        onClickRetry = { viewModel.initialize() },
+        onClickItem = onClickItem
+    )
 }
 @Composable
 fun SeeAllPopularScreen(
     modifier: Modifier = Modifier,
     viewModel: PopularViewModel = hiltViewModel(),
+    onClickItem: (id: Int) -> Unit = {}
 ) {
     val popular by viewModel.seeAllPopularFlow.collectAsState()
-    MoviesGridList(state = popular, onClickRetry = { viewModel.initialize() })
+    MoviesGridList(
+        state = popular,
+        onClickRetry = { viewModel.initialize() },
+        onClickItem = onClickItem
+    )
 }
 @Composable
-fun MoviesGridList(state: SeeAllState, onClickRetry: () -> Unit = {}) {
+fun MoviesGridList(
+    state: SeeAllState,
+    onClickRetry: () -> Unit = {},
+    onClickItem: (id: Int) -> Unit = {}
+) {
 
     when (state) {
         SeeAllState.Error -> {
@@ -82,7 +106,7 @@ fun MoviesGridList(state: SeeAllState, onClickRetry: () -> Unit = {}) {
             ShowAllLoading()
         }
         is SeeAllState.Ready -> {
-            ShowAllMovies(state.movies)
+            ShowAllMovies(state.movies, onClickItem = onClickItem)
         }
     }
 }
@@ -123,7 +147,11 @@ fun ShowAllError(modifier: Modifier = Modifier, onClickRetry: () -> Unit = {}) {
 }
 
 @Composable
-fun ShowAllMovies(movies: List<MovieEntity>, modifier: Modifier = Modifier) {
+fun ShowAllMovies(
+    movies: List<MovieEntity>,
+    modifier: Modifier = Modifier,
+    onClickItem: (id: Int) -> Unit = {}
+) {
     val configuration = LocalConfiguration.current
 
     val screenHeight = configuration.screenHeightDp.dp
@@ -136,7 +164,11 @@ fun ShowAllMovies(movies: List<MovieEntity>, modifier: Modifier = Modifier) {
         modifier = modifier.fillMaxWidth()
     ) {
         items(movies) {item ->
-            MoviePosterImageItem(item = item, Modifier.size(width = 200.dp, height = 300.dp))
+            MoviePosterImageItem(
+                item = item,
+                Modifier.size(width = 200.dp, height = 300.dp),
+                onClickItem
+            )
         }
     }
 }

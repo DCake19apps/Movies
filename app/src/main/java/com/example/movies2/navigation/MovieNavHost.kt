@@ -109,20 +109,33 @@ fun MovieNavHost(
                 },
                 onClickSeeAllPopular = {
                     navController.navigateSingleTopTo(MoviesDestination.POPULAR)
+                },
+                onClickItem = {
+                    navController.navigateSingleTopTo(
+                        MoviesDestination.DETAIL.replace("{movieId}", it.toString())
+                    )
                 }
             )
         }
         composable(route = MoviesDestination.NOW_SHOWING) {
-            SeeAllNowPlayingScreen()
+            SeeAllNowPlayingScreen(
+                onClickItem = { navController.navigateSingleTopTo(getDetailDestination(it)) }
+            )
         }
         composable(route = MoviesDestination.UPCOMING) {
-            SeeAllUpcomingScreen()
+            SeeAllUpcomingScreen(
+                onClickItem = { navController.navigateSingleTopTo(getDetailDestination(it)) }
+            )
         }
         composable(route = MoviesDestination.TOP_RATED) {
-            SeeAllTopRatedScreen()
+            SeeAllTopRatedScreen(
+                onClickItem = { navController.navigateSingleTopTo(getDetailDestination(it)) }
+            )
         }
         composable(route = MoviesDestination.POPULAR) {
-            SeeAllPopularScreen()
+            SeeAllPopularScreen(
+                onClickItem = { navController.navigateSingleTopTo(getDetailDestination(it)) }
+            )
         }
         composable(route = MoviesDestination.DETAIL) {
             MovieDetailsScreen()
@@ -131,7 +144,13 @@ fun MovieNavHost(
             SearchScreen()
         }
     }
+
 }
+
+fun getDetailDestination(id: Int): String {
+    return MoviesDestination.DETAIL.replace("{movieId}", id.toString())
+}
+
 
 fun NavHostController.navigateSingleTopTo(route: String) =
     this.navigate(route) {
