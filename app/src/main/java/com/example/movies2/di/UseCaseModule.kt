@@ -12,6 +12,9 @@ import com.example.movie_domain.list.GetTopRatedMoviesUseCaseImpl
 import com.example.movie_domain.list.GetUpcomingMoviesUseCase
 import com.example.movie_domain.list.GetUpcomingMoviesUseCaseImpl
 import com.example.movie_domain.list.MoviesRepository
+import com.example.movie_domain.people.CreditsRepository
+import com.example.movie_domain.people.GetCreditsUseCase
+import com.example.movie_domain.people.GetCreditsUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -50,5 +53,11 @@ class UseCaseModule {
     @Provides
     fun provideGetMovieDetailsUseCase(repository: MoviesDetailRepository): GetMoviesDetailsUseCase {
         return GetMoviesDetailsUseCaseImpl(repository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideGetCreditsUseCase(repository: CreditsRepository): GetCreditsUseCase {
+        return GetCreditsUseCaseImpl(repository)
     }
 }

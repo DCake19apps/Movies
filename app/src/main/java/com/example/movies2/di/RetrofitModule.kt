@@ -4,6 +4,7 @@ import com.example.movies_data.api.MoviesApi
 import com.example.movies_data.OkHttpClientProvider
 import com.example.movies_data.OkHttpClientProviderImpl
 import com.example.movies_data.RetrofitClient
+import com.example.movies_data.api.CreditsApi
 import com.example.movies_data.api.MovieDetailsApi
 import dagger.Module
 import dagger.Provides
@@ -25,6 +26,12 @@ class RetrofitModule {
     @Provides
     fun provideMovieDetailsApi(retrofitClient: RetrofitClient): MovieDetailsApi {
         return retrofitClient.create(MovieDetailsApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideCreditsApi(retrofitClient: RetrofitClient): CreditsApi {
+        return retrofitClient.create(CreditsApi::class.java)
     }
 
     @Singleton
