@@ -145,7 +145,10 @@ fun MovieNavHost(
             MovieDetailsScreen()
         }
         composable(route = MoviesDestination.DISCOVER) {
-            DiscoverScreen()
+            SearchScreen()
+        }
+        composable(route = MoviesDestination.SEARCH) {
+            SearchScreen()
         }
     }
 

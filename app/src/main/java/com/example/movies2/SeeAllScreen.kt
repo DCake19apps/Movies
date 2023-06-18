@@ -16,7 +16,7 @@ import com.example.moveis_ui.seeall.UpcomingViewModel
 import com.example.movies2.ui.theme.MoviesTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.dp
-import com.example.moveis_ui.SeeAllState
+import com.example.moveis_ui.MovieListState
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -92,20 +92,20 @@ fun SeeAllPopularScreen(
 }
 @Composable
 fun MoviesGridList(
-    state: SeeAllState,
+    state: MovieListState,
     onClickRetry: () -> Unit = {},
     onClickItem: (id: Int) -> Unit = {}
 ) {
 
     when (state) {
-        SeeAllState.Error -> {
+        MovieListState.Error -> {
             ShowAllError(onClickRetry = onClickRetry)
             Log.v("Upcoming","error")
         }
-        SeeAllState.Loading -> {
+        MovieListState.Loading -> {
             ShowAllLoading()
         }
-        is SeeAllState.Ready -> {
+        is MovieListState.Ready -> {
             ShowAllMovies(state.movies, onClickItem = onClickItem)
         }
     }

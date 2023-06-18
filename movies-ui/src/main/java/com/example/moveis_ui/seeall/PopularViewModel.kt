@@ -2,7 +2,7 @@ package com.example.moveis_ui.seeall
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.moveis_ui.SeeAllState
+import com.example.moveis_ui.MovieListState
 import com.example.movie_domain.list.GetPopularMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -19,8 +19,8 @@ class PopularViewModel @Inject constructor(
     private val getPopularMoviesUseCase: GetPopularMoviesUseCase
 ): ViewModel() {
 
-    private val _seeAllPopularFlow = MutableStateFlow<SeeAllState>(SeeAllState.Loading)
-    val seeAllPopularFlow: StateFlow<SeeAllState>
+    private val _seeAllPopularFlow = MutableStateFlow<MovieListState>(MovieListState.Loading)
+    val seeAllPopularFlow: StateFlow<MovieListState>
         get() = _seeAllPopularFlow
 
     init {
@@ -30,16 +30,16 @@ class PopularViewModel @Inject constructor(
     fun initialize() {
         viewModelScope.launch(CoroutineExceptionHandler {
                 coroutineContext, throwable ->
-            _seeAllPopularFlow.value = SeeAllState.Error
+            _seeAllPopularFlow.value = MovieListState.Error
         }) {
             withContext(Dispatchers.Default) {
                 val movies = getPopularMoviesUseCase.invoke()
 
-                _seeAllPopularFlow.value = SeeAllState.Ready(movies)
+                _seeAllPopularFlow.value = MovieListState.Ready(movies)
             }
         }.invokeOnCompletion {
             if (it !=null && it.cause !is CancellationException) {
-                _seeAllPopularFlow.value = SeeAllState.Error
+                _seeAllPopularFlow.value = MovieListState.Error
             }
         }
     }

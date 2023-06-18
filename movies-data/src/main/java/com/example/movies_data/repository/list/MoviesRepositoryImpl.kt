@@ -1,7 +1,9 @@
 package com.example.movies_data.repository.list
 
+import com.example.movie_domain.list.DiscoverFilter
 import com.example.movie_domain.list.MovieEntity
 import com.example.movie_domain.list.MoviesRepository
+import com.example.movie_domain.list.SortBy
 import com.example.movies_data.apikey.ApiKeyProvider
 import com.example.movies_data.DataRetrieverManager
 import com.example.movies_data.api.MoviesApi
@@ -15,33 +17,58 @@ class MoviesRepositoryImpl(
     private val nowPlayingDataRetrieverManager: DataRetrieverManager<List<MovieEntity>>,
     private val upcomingDataRetrieverManager: DataRetrieverManager<List<MovieEntity>>,
     private val topRatedDataRetrieverManager: DataRetrieverManager<List<MovieEntity>>,
-    private val popularDataRetrieverManager: DataRetrieverManager<List<MovieEntity>>
+    private val popularDataRetrieverManager: DataRetrieverManager<List<MovieEntity>>,
+    private val discoverDataRetrieverManager: DataRetrieverManager<List<MovieEntity>>,
+    private val searchDataRetrieverManager: DataRetrieverManager<List<MovieEntity>>
     ): MoviesRepository {
 
     override suspend fun getNowShowing(): List<MovieEntity> {
-        return nowPlayingDataRetrieverManager.get{ retrieve(MovieListType.NOW_PLAYING) }
+        return nowPlayingDataRetrieverManager.get{ retrieve(MovieListType.NowPlaying) }
     }
 
     override suspend fun getUpcoming(): List<MovieEntity> {
-        return upcomingDataRetrieverManager.get{ retrieve(MovieListType.UPCOMING) }
+        return upcomingDataRetrieverManager.get{ retrieve(MovieListType.Upcoming) }
     }
 
     override suspend fun getTopRated(): List<MovieEntity> {
-        return topRatedDataRetrieverManager.get{ retrieve(MovieListType.TOP_RATED) }
+        return topRatedDataRetrieverManager.get{ retrieve(MovieListType.TopRated) }
     }
 
     override suspend fun getPopular(): List<MovieEntity> {
-        return popularDataRetrieverManager.get{ retrieve(MovieListType.POPULAR) }
+        return popularDataRetrieverManager.get{ retrieve(MovieListType.Popular) }
+    }
+
+    override suspend fun getDiscoverResults(filter: DiscoverFilter): List<MovieEntity> {
+        return discoverDataRetrieverManager.get{ retrieve(MovieListType.DiscoverResults(filter)) }
+    }
+
+    override suspend fun getSearchResults(term: String): List<MovieEntity> {
+        return searchDataRetrieverManager.get{ retrieve(MovieListType.SearchResults(term)) }
     }
 
     private suspend fun retrieve(type: MovieListType): List<MovieEntity> {
         val cachedMovies = cache.get(type)
         return if (cachedMovies == null) {
             val apiMovies = when(type) {
-                MovieListType.NOW_PLAYING -> api.getNowPlaying(apiKeyProvider.getApiKey(), 1)
-                MovieListType.UPCOMING -> api.getUpcoming(apiKeyProvider.getApiKey(), 1)
-                MovieListType.POPULAR -> api.getPopular(apiKeyProvider.getApiKey(), 1)
-                MovieListType.TOP_RATED -> api.getTopRated(apiKeyProvider.getApiKey(), 1)
+                MovieListType.NowPlaying -> api.getNowPlaying(apiKeyProvider.getApiKey(), 1)
+                MovieListType.Upcoming -> api.getUpcoming(apiKeyProvider.getApiKey(), 1)
+                MovieListType.Popular -> api.getPopular(apiKeyProvider.getApiKey(), 1)
+                MovieListType.TopRated -> api.getTopRated(apiKeyProvider.getApiKey(), 1)
+                is MovieListType.DiscoverResults -> api.getDiscoverResults(
+                    apiKeyProvider.getApiKey(),
+                    if (type.filter.sortBy == SortBy.POPULARITY) "popularity.desc" else "vote_average.desc",
+                    type.filter.minVoteAverage.toString(),
+                    if (type.filter.minVoteAverage > 1) "10" else "0",
+                    type.filter.genres.toString().drop(1).dropLast(1).replace(" ", ""),
+                    type.filter.releaseYear?.toString()?:"",
+                    1
+                )
+                is MovieListType.SearchResults ->
+                    api.getSearchResults(
+                        apiKeyProvider.getApiKey(),
+                        type.term,
+                        1
+                    )
             }
             cache.save(type, apiMovies)
             mapper.map(apiMovies)

@@ -5,4 +5,6 @@ interface MoviesRepository {
     suspend fun getUpcoming(): List<MovieEntity>
     suspend fun getTopRated(): List<MovieEntity>
     suspend fun getPopular(): List<MovieEntity>
+    suspend fun getDiscoverResults(filter: DiscoverFilter): List<MovieEntity>
+    suspend fun getSearchResults(term: String): List<MovieEntity>
 }

@@ -28,4 +28,24 @@ interface MoviesApi {
         @Query("api_key") apiKey: String,
         @Query("page") pageNumber: Int
     ): MoviesListResult
+
+    // sort_by from { popularity.desc, vote_average.desc}
+    // with_genres comma separated ids
+    @GET("/3/discover/movie")
+    suspend fun getDiscoverResults(
+        @Query("api_key") apiKey: String,
+        @Query("sort_by") sortBy: String,
+        @Query("vote_average.gte") minVoteAverage: String,
+        @Query("vote_count.gte") minVoteCount: String,
+        @Query("with_genres") withGenres: String,
+        @Query("primary_release_year") year: String,
+        @Query("page") pageNumber: Int
+    ): MoviesListResult
+
+    @GET("/3/search/movie")
+    suspend fun getSearchResults(
+        @Query("api_key") apiKey: String,
+        @Query("query") query: String,
+        @Query("page") pageNumber: Int
+    ): MoviesListResult
 }

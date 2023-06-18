@@ -54,6 +54,11 @@ class HomeViewModel @Inject constructor(
 //            }
 //        }
 
+        val x = listOf(1,2,3)
+
+        val s = x.toString().drop(1).dropLast(1).replace(" ", "")
+
+        println()
         launch(_nowShowingFlow) { getNowPlayingMoviesUseCase.invoke() }
         launch(_upcomingFlow) { getUpcomingMoviesUseCase.invoke() }
         launch(_topRatedFlow) { getTopRatedMoviesUseCase.invoke() }

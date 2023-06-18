@@ -3,7 +3,7 @@ package com.example.moveis_ui.seeall
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.moveis_ui.SeeAllState
+import com.example.moveis_ui.MovieListState
 import com.example.movie_domain.list.GetUpcomingMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -20,8 +20,8 @@ class UpcomingViewModel @Inject constructor(
     private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase
 ): ViewModel() {
 
-    private val _seeAllUpcomingFlow = MutableStateFlow<SeeAllState>(SeeAllState.Loading)
-    val seeAllUpcomingFlow: StateFlow<SeeAllState>
+    private val _seeAllUpcomingFlow = MutableStateFlow<MovieListState>(MovieListState.Loading)
+    val seeAllUpcomingFlow: StateFlow<MovieListState>
         get() = _seeAllUpcomingFlow
 
     init {
@@ -33,16 +33,16 @@ class UpcomingViewModel @Inject constructor(
         viewModelScope.launch(CoroutineExceptionHandler {
                 coroutineContext, throwable ->
             Log.v("UpcomingViewModel", "${throwable.message}")
-            _seeAllUpcomingFlow.value = SeeAllState.Error
+            _seeAllUpcomingFlow.value = MovieListState.Error
         }) {
             withContext(Dispatchers.Default) {
                 val movies = getUpcomingMoviesUseCase.invoke()
 
-                _seeAllUpcomingFlow.value = SeeAllState.Ready(movies)
+                _seeAllUpcomingFlow.value = MovieListState.Ready(movies)
             }
         }.invokeOnCompletion {
             if (it !=null && it.cause !is CancellationException) {
-                _seeAllUpcomingFlow.value = SeeAllState.Error
+                _seeAllUpcomingFlow.value = MovieListState.Error
             }
             Log.v("UpcomingViewModel", "completion: ${it?.message}")
         }

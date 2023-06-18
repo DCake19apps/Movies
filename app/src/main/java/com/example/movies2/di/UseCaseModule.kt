@@ -3,10 +3,14 @@ package com.example.movies2.di
 import com.example.movie_domain.details.GetMoviesDetailsUseCase
 import com.example.movie_domain.details.GetMoviesDetailsUseCaseImpl
 import com.example.movie_domain.details.MoviesDetailRepository
+import com.example.movie_domain.list.GetDiscoverResultsUseCase
+import com.example.movie_domain.list.GetDiscoverResultsUseCaseImpl
 import com.example.movie_domain.list.GetNowPlayingMoviesUseCase
 import com.example.movie_domain.list.GetNowPlayingMoviesUseCaseImpl
 import com.example.movie_domain.list.GetPopularMoviesUseCase
 import com.example.movie_domain.list.GetPopularMoviesUseCaseImpl
+import com.example.movie_domain.list.GetSearchResultsUseCase
+import com.example.movie_domain.list.GetSearchResultsUseCaseImpl
 import com.example.movie_domain.list.GetTopRatedMoviesUseCase
 import com.example.movie_domain.list.GetTopRatedMoviesUseCaseImpl
 import com.example.movie_domain.list.GetUpcomingMoviesUseCase
@@ -48,6 +52,19 @@ class UseCaseModule {
     fun provideGetPopularUseCase(repository: MoviesRepository): GetPopularMoviesUseCase {
         return GetPopularMoviesUseCaseImpl(repository)
     }
+
+    @Singleton
+    @Provides
+    fun provideGetDiscoverResultsUseCase(repository: MoviesRepository): GetDiscoverResultsUseCase {
+        return GetDiscoverResultsUseCaseImpl(repository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideGetSearchResultsUseCase(repository: MoviesRepository): GetSearchResultsUseCase {
+        return GetSearchResultsUseCaseImpl(repository)
+    }
+
 
     @Singleton
     @Provides

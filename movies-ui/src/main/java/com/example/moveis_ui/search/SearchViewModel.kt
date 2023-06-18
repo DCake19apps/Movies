@@ -1,9 +1,9 @@
-package com.example.moveis_ui.seeall
+package com.example.moveis_ui.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moveis_ui.MovieListState
-import com.example.movie_domain.list.GetNowPlayingMoviesUseCase
+import com.example.movie_domain.list.GetSearchResultsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
@@ -11,36 +11,33 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
+import javax.inject.Inject
 
 @HiltViewModel
-class NowPlayingViewModel@Inject constructor(
-    private val getNowPlayingMoviesUseCase: GetNowPlayingMoviesUseCase
+class SearchViewModel @Inject constructor(
+    private val getSearchResultsUseCase: GetSearchResultsUseCase
 ): ViewModel() {
 
-    private val _seeAllNowPlayingFlow = MutableStateFlow<MovieListState>(MovieListState.Loading)
-    val seeAllNowPlayingFlow: StateFlow<MovieListState>
-        get() = _seeAllNowPlayingFlow
+    private val _searchFlow = MutableStateFlow<MovieListState>(MovieListState.Loading)
+    val searchFlow: StateFlow<MovieListState>
+        get() = _searchFlow
 
-    init {
-        initialize()
-    }
-
-    fun initialize() {
+    fun search(term: String) {
         viewModelScope.launch(CoroutineExceptionHandler {
                 coroutineContext, throwable ->
-            _seeAllNowPlayingFlow.value = MovieListState.Error
+            _searchFlow.value = MovieListState.Error
         }) {
             withContext(Dispatchers.Default) {
-                val movies = getNowPlayingMoviesUseCase.invoke()
+                val movies = getSearchResultsUseCase.invoke(term)
 
-                _seeAllNowPlayingFlow.value = MovieListState.Ready(movies)
+                _searchFlow.value = MovieListState.Ready(movies)
             }
         }.invokeOnCompletion {
             if (it !=null && it.cause !is CancellationException) {
-                _seeAllNowPlayingFlow.value = MovieListState.Error
+                _searchFlow.value = MovieListState.Error
             }
         }
     }
+
 }

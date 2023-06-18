@@ -2,7 +2,7 @@ package com.example.moveis_ui.seeall
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.moveis_ui.SeeAllState
+import com.example.moveis_ui.MovieListState
 import com.example.movie_domain.list.GetTopRatedMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -19,8 +19,8 @@ class TopRatedViewModel @Inject constructor(
     private val getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase
 ): ViewModel() {
 
-    private val _seeAllTopRatedFlow = MutableStateFlow<SeeAllState>(SeeAllState.Loading)
-    val seeAllTopRatedFlow: StateFlow<SeeAllState>
+    private val _seeAllTopRatedFlow = MutableStateFlow<MovieListState>(MovieListState.Loading)
+    val seeAllTopRatedFlow: StateFlow<MovieListState>
         get() = _seeAllTopRatedFlow
 
     init {
@@ -30,16 +30,16 @@ class TopRatedViewModel @Inject constructor(
     fun initialize() {
         viewModelScope.launch(CoroutineExceptionHandler {
                 coroutineContext, throwable ->
-            _seeAllTopRatedFlow.value = SeeAllState.Error
+            _seeAllTopRatedFlow.value = MovieListState.Error
         }) {
             withContext(Dispatchers.Default) {
                 val movies = getTopRatedMoviesUseCase.invoke()
 
-                _seeAllTopRatedFlow.value = SeeAllState.Ready(movies)
+                _seeAllTopRatedFlow.value = MovieListState.Ready(movies)
             }
         }.invokeOnCompletion {
             if (it !=null && it.cause !is CancellationException) {
-                _seeAllTopRatedFlow.value = SeeAllState.Error
+                _seeAllTopRatedFlow.value = MovieListState.Error
             }
         }
     }
