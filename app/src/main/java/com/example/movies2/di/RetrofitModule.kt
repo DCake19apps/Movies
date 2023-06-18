@@ -1,9 +1,10 @@
 package com.example.movies2.di
 
-import com.example.movies_data.MoviesApi
+import com.example.movies_data.api.MoviesApi
 import com.example.movies_data.OkHttpClientProvider
 import com.example.movies_data.OkHttpClientProviderImpl
 import com.example.movies_data.RetrofitClient
+import com.example.movies_data.api.MovieDetailsApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,8 +17,14 @@ class RetrofitModule {
 
     @Singleton
     @Provides
-    fun providePlaceHolderApi(retrofitClient: RetrofitClient): MoviesApi {
+    fun provideMoviesApi(retrofitClient: RetrofitClient): MoviesApi {
         return retrofitClient.create(MoviesApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideMovieDetailsApi(retrofitClient: RetrofitClient): MovieDetailsApi {
+        return retrofitClient.create(MovieDetailsApi::class.java)
     }
 
     @Singleton

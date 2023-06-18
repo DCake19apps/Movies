@@ -1,6 +1,6 @@
-package com.example.movies_data
+package com.example.movies_data.repository.list
 
-import com.example.movie_domain.MovieEntity
+import com.example.movie_domain.list.MovieEntity
 import com.example.movies_data.apipojo.MovieResult
 import com.example.movies_data.apipojo.MoviesListResult
 

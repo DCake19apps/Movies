@@ -1,14 +1,17 @@
 package com.example.movies2.di
 
-import com.example.movie_domain.GetNowPlayingMoviesUseCase
-import com.example.movie_domain.GetNowPlayingMoviesUseCaseImpl
-import com.example.movie_domain.GetPopularMoviesUseCase
-import com.example.movie_domain.GetPopularMoviesUseCaseImpl
-import com.example.movie_domain.GetTopRatedMoviesUseCase
-import com.example.movie_domain.GetTopRatedMoviesUseCaseImpl
-import com.example.movie_domain.GetUpcomingMoviesUseCase
-import com.example.movie_domain.GetUpcomingMoviesUseCaseImpl
-import com.example.movie_domain.MoviesRepository
+import com.example.movie_domain.details.GetMoviesDetailsUseCase
+import com.example.movie_domain.details.GetMoviesDetailsUseCaseImpl
+import com.example.movie_domain.details.MoviesDetailRepository
+import com.example.movie_domain.list.GetNowPlayingMoviesUseCase
+import com.example.movie_domain.list.GetNowPlayingMoviesUseCaseImpl
+import com.example.movie_domain.list.GetPopularMoviesUseCase
+import com.example.movie_domain.list.GetPopularMoviesUseCaseImpl
+import com.example.movie_domain.list.GetTopRatedMoviesUseCase
+import com.example.movie_domain.list.GetTopRatedMoviesUseCaseImpl
+import com.example.movie_domain.list.GetUpcomingMoviesUseCase
+import com.example.movie_domain.list.GetUpcomingMoviesUseCaseImpl
+import com.example.movie_domain.list.MoviesRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,5 +44,11 @@ class UseCaseModule {
     @Provides
     fun provideGetPopularUseCase(repository: MoviesRepository): GetPopularMoviesUseCase {
         return GetPopularMoviesUseCaseImpl(repository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideGetMovieDetailsUseCase(repository: MoviesDetailRepository): GetMoviesDetailsUseCase {
+        return GetMoviesDetailsUseCaseImpl(repository)
     }
 }

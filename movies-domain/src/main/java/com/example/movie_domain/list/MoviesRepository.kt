@@ -1,4 +1,4 @@
-package com.example.movie_domain
+package com.example.movie_domain.list
 
 interface MoviesRepository {
     suspend fun getNowShowing(): List<MovieEntity>

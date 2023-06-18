@@ -30,7 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.moveis_ui.HomeState
 import com.example.moveis_ui.HomeViewModel
-import com.example.movie_domain.MovieEntity
+import com.example.movie_domain.list.MovieEntity
 import com.example.movies2.ui.theme.MoviesTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment

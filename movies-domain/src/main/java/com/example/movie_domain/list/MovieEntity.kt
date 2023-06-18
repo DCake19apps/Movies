@@ -1,4 +1,4 @@
-package com.example.movie_domain
+package com.example.movie_domain.list
 
 data class MovieEntity(
     val id: Int,

@@ -1,4 +1,4 @@
-package com.example.movies_data
+package com.example.movies_data.api
 
 import com.example.movies_data.apipojo.MoviesListResult
 import retrofit2.http.GET

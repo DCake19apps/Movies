@@ -1,7 +1,10 @@
-package com.example.movies_data
+package com.example.movies_data.repository.list
 
-import com.example.movie_domain.MovieEntity
-import com.example.movie_domain.MoviesRepository
+import com.example.movie_domain.list.MovieEntity
+import com.example.movie_domain.list.MoviesRepository
+import com.example.movies_data.apikey.ApiKeyProvider
+import com.example.movies_data.DataRetrieverManager
+import com.example.movies_data.api.MoviesApi
 import com.example.movies_data.cache.MoviesCache
 
 class MoviesRepositoryImpl(

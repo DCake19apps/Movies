@@ -1,4 +1,4 @@
-package com.example.movie_domain
+package com.example.movie_domain.list
 
 class GetNowPlayingMoviesUseCaseImpl(
     private val repo: MoviesRepository

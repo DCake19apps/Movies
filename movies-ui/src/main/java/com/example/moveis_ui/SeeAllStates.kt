@@ -1,6 +1,6 @@
 package com.example.moveis_ui
 
-import com.example.movie_domain.MovieEntity
+import com.example.movie_domain.list.MovieEntity
 
 sealed class SeeAllState {
     object Loading: SeeAllState()

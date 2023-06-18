@@ -3,11 +3,11 @@ package com.example.moveis_ui
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.movie_domain.GetNowPlayingMoviesUseCase
-import com.example.movie_domain.GetPopularMoviesUseCase
-import com.example.movie_domain.GetTopRatedMoviesUseCase
-import com.example.movie_domain.GetUpcomingMoviesUseCase
-import com.example.movie_domain.MovieEntity
+import com.example.movie_domain.list.GetNowPlayingMoviesUseCase
+import com.example.movie_domain.list.GetPopularMoviesUseCase
+import com.example.movie_domain.list.GetTopRatedMoviesUseCase
+import com.example.movie_domain.list.GetUpcomingMoviesUseCase
+import com.example.movie_domain.list.MovieEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers

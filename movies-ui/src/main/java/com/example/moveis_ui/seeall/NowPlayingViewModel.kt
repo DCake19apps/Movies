@@ -3,7 +3,7 @@ package com.example.moveis_ui.seeall
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moveis_ui.SeeAllState
-import com.example.movie_domain.GetNowPlayingMoviesUseCase
+import com.example.movie_domain.list.GetNowPlayingMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers

@@ -1,4 +1,4 @@
-package com.example.movies_data
+package com.example.movies_data.apikey
 
 interface ApiKeyProvider {
     fun getApiKey(): String

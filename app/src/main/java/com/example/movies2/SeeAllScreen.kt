@@ -32,7 +32,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.res.stringResource
-import com.example.movie_domain.MovieEntity
+import com.example.movie_domain.list.MovieEntity
 import androidx.compose.ui.platform.LocalConfiguration
 import com.example.moveis_ui.seeall.NowPlayingViewModel
 import com.example.moveis_ui.seeall.PopularViewModel
