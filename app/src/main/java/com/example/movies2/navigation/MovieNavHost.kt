@@ -18,9 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -87,6 +85,23 @@ fun MoviesBottomNavigation(
                 navController.navigateSingleTopTo(MoviesDestination.DISCOVER)
             }
         )
+        BottomNavigationItem(
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    // ImageVector.vectorResource(id = R.drawable.baseline_movie_filter_24),
+                    contentDescription = null
+                )
+            },
+            label = {
+                Text(stringResource(R.string.search))
+            },
+            selected = state == MoviesDestination.SEARCH,
+            onClick = {
+                state = MoviesDestination.SEARCH
+                navController.navigateSingleTopTo(MoviesDestination.SEARCH)
+            }
+        )
     }
 }
 
@@ -145,10 +160,12 @@ fun MovieNavHost(
             MovieDetailsScreen()
         }
         composable(route = MoviesDestination.DISCOVER) {
-            SearchScreen()
+            DiscoverScreen()
         }
         composable(route = MoviesDestination.SEARCH) {
-            SearchScreen()
+            SearchScreen(
+                onClickItem = { navController.navigateSingleTopTo(getDetailDestination(it)) }
+            )
         }
     }
 

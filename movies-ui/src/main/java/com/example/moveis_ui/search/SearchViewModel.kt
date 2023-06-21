@@ -19,11 +19,12 @@ class SearchViewModel @Inject constructor(
     private val getSearchResultsUseCase: GetSearchResultsUseCase
 ): ViewModel() {
 
-    private val _searchFlow = MutableStateFlow<MovieListState>(MovieListState.Loading)
+    private val _searchFlow = MutableStateFlow<MovieListState>(MovieListState.Ready(emptyList()))
     val searchFlow: StateFlow<MovieListState>
         get() = _searchFlow
 
     fun search(term: String) {
+        _searchFlow.value = MovieListState.Loading
         viewModelScope.launch(CoroutineExceptionHandler {
                 coroutineContext, throwable ->
             _searchFlow.value = MovieListState.Error
