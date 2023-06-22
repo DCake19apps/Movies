@@ -21,7 +21,7 @@ class DiscoverViewModel @Inject constructor(
     private val getDiscoverResultsUseCase: GetDiscoverResultsUseCase
 ): ViewModel() {
 
-    private val _discoverFlow = MutableStateFlow<MovieListState>(MovieListState.Loading)
+    private val _discoverFlow = MutableStateFlow<MovieListState>(MovieListState.Ready(emptyList()))
     val discoverFlow: StateFlow<MovieListState>
         get() = _discoverFlow
 
