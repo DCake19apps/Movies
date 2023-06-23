@@ -82,6 +82,7 @@ fun MoviesBottomNavigation(
             selected = state == MoviesDestination.DISCOVER,
             onClick = {
                 state = MoviesDestination.DISCOVER
+                navController.clearBackStack(MoviesDestination.DISCOVER)
                 navController.navigateSingleTopTo(MoviesDestination.DISCOVER)
             }
         )
@@ -99,6 +100,7 @@ fun MoviesBottomNavigation(
             selected = state == MoviesDestination.SEARCH,
             onClick = {
                 state = MoviesDestination.SEARCH
+                navController.clearBackStack(MoviesDestination.SEARCH)
                 navController.navigateSingleTopTo(MoviesDestination.SEARCH)
             }
         )
@@ -130,30 +132,28 @@ fun MovieNavHost(
                     navController.navigateSingleTopTo(MoviesDestination.POPULAR)
                 },
                 onClickItem = {
-                    navController.navigateSingleTopTo(
-                        MoviesDestination.DETAIL.replace("{movieId}", it.toString())
-                    )
+                    navController.navigateSingleTopTo(getDetailDestination(it))
                 }
             )
         }
         composable(route = MoviesDestination.NOW_SHOWING) {
             SeeAllNowPlayingScreen(
-                onClickItem = { navController.navigateSingleTopTo(getDetailDestination(it)) }
+                onClickItem = { navController.navigate(getDetailDestination(it)) }
             )
         }
         composable(route = MoviesDestination.UPCOMING) {
             SeeAllUpcomingScreen(
-                onClickItem = { navController.navigateSingleTopTo(getDetailDestination(it)) }
+                onClickItem = { navController.navigate(getDetailDestination(it)) }
             )
         }
         composable(route = MoviesDestination.TOP_RATED) {
             SeeAllTopRatedScreen(
-                onClickItem = { navController.navigateSingleTopTo(getDetailDestination(it)) }
+                onClickItem = { navController.navigate(getDetailDestination(it)) }
             )
         }
         composable(route = MoviesDestination.POPULAR) {
             SeeAllPopularScreen(
-                onClickItem = { navController.navigateSingleTopTo(getDetailDestination(it)) }
+                onClickItem = { navController.navigate(getDetailDestination(it)) }
             )
         }
         composable(route = MoviesDestination.DETAIL) {
@@ -161,12 +161,12 @@ fun MovieNavHost(
         }
         composable(route = MoviesDestination.DISCOVER) {
             DiscoverScreen(
-                onClickItem = { navController.navigateSingleTopTo(getDetailDestination(it)) }
+                onClickItem = { navController.navigate(getDetailDestination(it)) }
             )
         }
         composable(route = MoviesDestination.SEARCH) {
             SearchScreen(
-                onClickItem = { navController.navigateSingleTopTo(getDetailDestination(it)) }
+                onClickItem = { navController.navigate(getDetailDestination(it)) }
             )
         }
     }

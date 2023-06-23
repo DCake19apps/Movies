@@ -103,7 +103,7 @@ fun MoviesGridList(
             Log.v("Upcoming","error")
         }
         MovieListState.Loading -> {
-            ShowAllLoading()
+            PageLoading()
         }
         is MovieListState.Ready -> {
             ShowAllMovies(state.movies, onClickItem = onClickItem)
@@ -112,7 +112,7 @@ fun MoviesGridList(
 }
 
 @Composable
-fun ShowAllLoading(modifier: Modifier = Modifier) {
+fun PageLoading(modifier: Modifier = Modifier) {
     Box(modifier = modifier.fillMaxSize()) {
         CircularProgressIndicator(
             modifier = Modifier
