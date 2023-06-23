@@ -160,7 +160,9 @@ fun MovieNavHost(
             MovieDetailsScreen()
         }
         composable(route = MoviesDestination.DISCOVER) {
-            DiscoverScreen()
+            DiscoverScreen(
+                onClickItem = { navController.navigateSingleTopTo(getDetailDestination(it)) }
+            )
         }
         composable(route = MoviesDestination.SEARCH) {
             SearchScreen(
