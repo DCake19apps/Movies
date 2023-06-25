@@ -5,5 +5,5 @@ import com.example.movie_domain.people.CastEntity
 sealed class CastState {
     object Loading: CastState()
     object Error: CastState()
-    data class Ready(val crew: List<CastEntity>): CastState()
+    data class Ready(val cast: List<CastEntity>): CastState()
 }
