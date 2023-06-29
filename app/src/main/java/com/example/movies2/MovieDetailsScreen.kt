@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -169,17 +170,18 @@ fun MovieOverview(details: MoviesDetailsEntity, modifier: Modifier = Modifier) {
                 Text(
                     text = details.title,
                     style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier.padding(horizontal = 8.dp)
+                    modifier = Modifier.padding(horizontal = 8.dp).testTag("title")
                 )
                 Row(modifier = Modifier.padding(8.dp)) {
                     Text(
                         text = details.releaseDate,
                         style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.testTag("release_date")
                     )
                     Text(
                         text = stringResource(R.string.mins, details.runtime),
                         style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(start = 32.dp)
+                        modifier = Modifier.padding(start = 32.dp).testTag("duration")
                     )
                 }
                 Score(
@@ -194,17 +196,18 @@ fun MovieOverview(details: MoviesDetailsEntity, modifier: Modifier = Modifier) {
             Text(
                 text = stringResource(R.string.revenue, details.revenue),
                 style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.testTag("revenue")
             )
             Text(
                 text = stringResource(R.string.budget, details.budget),
                 style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(start = 32.dp)
+                modifier = Modifier.padding(start = 32.dp).testTag("budget")
             )
         }
         Text(
             text = details.overview,
             style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(start = 16.dp)
+            modifier = Modifier.padding(start = 16.dp).testTag("overview")
         )
     }
 }
@@ -227,7 +230,7 @@ fun Score(
             Text(
                 text = rating,
                 color = textColor,
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier.align(Alignment.Center).testTag("rating")
             )
         }
     }
@@ -240,11 +243,11 @@ fun CastMembers(castMembers: List<CastEntity>, modifier: Modifier = Modifier) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-        modifier = modifier
+        modifier = modifier.testTag("cast_members")
     ) {
         items(castMembers.size) {
             val credit = castMembers[it]
-            Member(credit.name, credit.character, credit.profilePath)
+            Member(credit.name, credit.character, credit.profilePath, testId = it)
         }
     }
 
@@ -259,7 +262,7 @@ fun CrewMembers(crewMembers: List<CrewEntity>, modifier: Modifier = Modifier) {
     ) {
         items(crewMembers.size) {
             val credit = crewMembers[it]
-            Member(credit.name, credit.job, credit.profilePath)
+            Member(credit.name, credit.job, credit.profilePath, testId = it)
         }
     }
     
@@ -269,7 +272,8 @@ fun Member(
     line1: String,
     line2: String,
     profilePath: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    testId: Int
 ) {
     Surface(modifier.fillMaxWidth(), RoundedCornerShape(8.dp), color = Color.LightGray) {
         Row(modifier = modifier.padding(4.dp)) {
@@ -286,12 +290,12 @@ fun Member(
                 Text(
                     text = line1,
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.padding(8.dp).testTag("line_1_$testId")
                 )
                 Text(
                     text = line2,
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.padding(8.dp).testTag("line_2_$testId")
                 )
             }
         }

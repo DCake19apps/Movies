@@ -89,4 +89,6 @@ dependencies {
     kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.44'
     // ...with Java.
     androidTestAnnotationProcessor 'com.google.dagger:hilt-android-compiler:2.44'
+
+    androidTestImplementation "org.mockito.kotlin:mockito-kotlin:5.0.0"
 }
