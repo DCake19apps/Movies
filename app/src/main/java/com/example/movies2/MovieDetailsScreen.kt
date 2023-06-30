@@ -55,7 +55,7 @@ import com.example.movies2.ui.theme.ratingVeryBad
 import com.example.movies2.ui.theme.ratingVeryGood
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalFoundationApi::class)
+
 @Composable
 fun MovieDetailsScreen(
     detailsViewModel: DetailsViewModel = hiltViewModel(),
@@ -65,10 +65,16 @@ fun MovieDetailsScreen(
     val cast by creditsViewModel.castFlow.collectAsState()
     val crew by creditsViewModel.crewFlow.collectAsState()
 
+    MovieDetailsScreen(overview, cast, crew)
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun MovieDetailsScreen(overview: DetailsState, cast: CastState, crew: CrewState) {
     val pagerState = rememberPagerState(0)
     val coroutineScope = rememberCoroutineScope()
 
-    Column() {
+    Column {
         Tabs(
             selectedTabIndex = pagerState.currentPage,
             onSelectedTab = { index: Int ->
@@ -93,10 +99,10 @@ fun MovieDetailsScreen(
     }
 }
 
-enum class TabPage(@StringRes val header: Int) {
-    OVERVIEW(R.string.overview),
-    CAST(R.string.cast),
-    CREW(R.string.crew)
+enum class TabPage(@StringRes val header: Int, val testTag: String) {
+    OVERVIEW(R.string.overview, "tab_overview"),
+    CAST(R.string.cast, "tab_cast"),
+    CREW(R.string.crew, "tab_crew")
 }
 
 @Composable
@@ -106,7 +112,8 @@ fun Tabs(selectedTabIndex: Int, onSelectedTab: (index: Int) -> Unit) {
             Tab(
                 selected = index == selectedTabIndex,
                 onClick = { onSelectedTab(index)},
-                text = { Text(text = stringResource(id = tabPage.header)) }
+                text = { Text(text = stringResource(id = tabPage.header)) },
+                modifier = Modifier.testTag(tabPage.testTag)
             )
         }
     }
@@ -170,7 +177,9 @@ fun MovieOverview(details: MoviesDetailsEntity, modifier: Modifier = Modifier) {
                 Text(
                     text = details.title,
                     style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier.padding(horizontal = 8.dp).testTag("title")
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                        .testTag("title")
                 )
                 Row(modifier = Modifier.padding(8.dp)) {
                     Text(
@@ -181,7 +190,9 @@ fun MovieOverview(details: MoviesDetailsEntity, modifier: Modifier = Modifier) {
                     Text(
                         text = stringResource(R.string.mins, details.runtime),
                         style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.padding(start = 32.dp).testTag("duration")
+                        modifier = Modifier
+                            .padding(start = 32.dp)
+                            .testTag("duration")
                     )
                 }
                 Score(
@@ -201,13 +212,17 @@ fun MovieOverview(details: MoviesDetailsEntity, modifier: Modifier = Modifier) {
             Text(
                 text = stringResource(R.string.budget, details.budget),
                 style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(start = 32.dp).testTag("budget")
+                modifier = Modifier
+                    .padding(start = 32.dp)
+                    .testTag("budget")
             )
         }
         Text(
             text = details.overview,
             style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(start = 16.dp).testTag("overview")
+            modifier = Modifier
+                .padding(start = 16.dp)
+                .testTag("overview")
         )
     }
 }
@@ -230,7 +245,9 @@ fun Score(
             Text(
                 text = rating,
                 color = textColor,
-                modifier = Modifier.align(Alignment.Center).testTag("rating")
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .testTag("rating")
             )
         }
     }
@@ -290,12 +307,16 @@ fun Member(
                 Text(
                     text = line1,
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(8.dp).testTag("line_1_$testId")
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .testTag("line_1_$testId")
                 )
                 Text(
                     text = line2,
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(8.dp).testTag("line_2_$testId")
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .testTag("line_2_$testId")
                 )
             }
         }

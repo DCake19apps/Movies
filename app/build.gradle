@@ -49,6 +49,9 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+//    testOptions {
+//        unitTests.returnDefaultValues = true
+//    }
 }
 
 dependencies {
@@ -91,4 +94,7 @@ dependencies {
     androidTestAnnotationProcessor 'com.google.dagger:hilt-android-compiler:2.44'
 
     androidTestImplementation "org.mockito.kotlin:mockito-kotlin:5.0.0"
+    androidTestImplementation 'org.mockito:mockito-android:3.0.0'
+   // androidTestImplementation'org.mockito:mockito-core:5.3.1'
+//    androidTestImplementation "org.mockito:mockito-inline:5.2.0"
 }

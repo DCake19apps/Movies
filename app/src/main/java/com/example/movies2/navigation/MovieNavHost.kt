@@ -132,6 +132,7 @@ fun MovieNavHost(
                     navController.navigateSingleTopTo(MoviesDestination.POPULAR)
                 },
                 onClickItem = {
+                    navController.clearBackStack(MoviesDestination.DETAIL)
                     navController.navigateSingleTopTo(getDetailDestination(it))
                 }
             )
