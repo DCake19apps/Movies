@@ -58,7 +58,7 @@ class DetailsViewModelTest {
             onBlocking { invoke(id) } doReturn moviesDetailsEntity
         }
 
-        val viewModel = DetailsViewModel(ssh, useCase, Dispatchers.Unconfined)
+        val viewModel = DetailsViewModel(ssh, useCase)
 
          assert(viewModel.detailsFlow.value == DetailsState.Ready(moviesDetailsEntity))
     }
@@ -78,7 +78,7 @@ class DetailsViewModelTest {
 //            .`when`(useCase.invoke(id))
 //            .thenThrow()
 
-        val viewModel = DetailsViewModel(ssh, useCase, Dispatchers.Unconfined)
+        val viewModel = DetailsViewModel(ssh, useCase)
 
         assert(viewModel.detailsFlow.value == DetailsState.Error)
 

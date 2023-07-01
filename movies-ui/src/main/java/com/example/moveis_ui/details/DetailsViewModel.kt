@@ -18,8 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val getMoviesDetailsUseCase: GetMoviesDetailsUseCase,
-    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
+    private val getMoviesDetailsUseCase: GetMoviesDetailsUseCase
 ): ViewModel() {
 
     private val _detailsFlow = MutableStateFlow<DetailsState>(DetailsState.Loading)
@@ -33,10 +32,8 @@ class DetailsViewModel @Inject constructor(
                     _detailsFlow.value = DetailsState.Error
                 }
             ) {
-                withContext(defaultDispatcher) {
-                    val details = getMoviesDetailsUseCase.invoke(id)
-                    _detailsFlow.value = DetailsState.Ready(details)
-                }
+                val details = getMoviesDetailsUseCase.invoke(id)
+                _detailsFlow.value = DetailsState.Ready(details)
             }.invokeOnCompletion {
                 if (it != null && it.cause !is CancellationException) {
                     _detailsFlow.value = DetailsState.Error

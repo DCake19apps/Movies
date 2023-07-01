@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.FilterList
@@ -24,6 +23,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -79,7 +79,7 @@ fun DiscoverScreen(
             onClick = {
                 displayDialog = true
             },
-            containerColor = MaterialTheme.colors.secondary,
+            containerColor = androidx.compose.material3.MaterialTheme.colorScheme.secondary,
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier
                 .padding(16.dp)
@@ -200,7 +200,7 @@ fun SelectGenres(add: (genres: Genres) -> Unit, remove: (genres: Genres) -> Unit
 
     Text(
         text = stringResource(R.string.select_genres),
-        style = androidx.compose.material3.MaterialTheme.typography.titleMedium,
+        style = MaterialTheme.typography.titleMedium,
         modifier = Modifier.padding(8.dp)
     )
 
@@ -225,8 +225,8 @@ fun SelectGenres(add: (genres: Genres) -> Unit, remove: (genres: Genres) -> Unit
 @Composable
 fun GenreButton(text: String, onChange: (selected: Boolean) -> Unit) {
     var selected by remember { mutableStateOf(false) }
-    val color = if (selected) MaterialTheme.colors.secondary else MaterialTheme.colors.primarySurface
-    val textColor = if (selected) MaterialTheme.colors.onSecondary else MaterialTheme.colors.onPrimary
+    val color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+    val textColor = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondary
 
     Button(
         onClick = {

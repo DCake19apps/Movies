@@ -176,7 +176,7 @@ fun MovieOverview(details: MoviesDetailsEntity, modifier: Modifier = Modifier) {
             Column() {
                 Text(
                     text = details.title,
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier
                         .padding(horizontal = 8.dp)
                         .testTag("title")
@@ -219,7 +219,7 @@ fun MovieOverview(details: MoviesDetailsEntity, modifier: Modifier = Modifier) {
         }
         Text(
             text = details.overview,
-            style = MaterialTheme.typography.bodyLarge,
+            style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier
                 .padding(start = 16.dp)
                 .testTag("overview")
@@ -292,7 +292,10 @@ fun Member(
     modifier: Modifier = Modifier,
     testId: Int
 ) {
-    Surface(modifier.fillMaxWidth(), RoundedCornerShape(8.dp), color = Color.LightGray) {
+    Surface(
+        modifier.fillMaxWidth(), RoundedCornerShape(8.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant
+    ) {
         Row(modifier = modifier.padding(4.dp)) {
             val painter = rememberAsyncImagePainter(profilePath)
             Image(
@@ -306,14 +309,16 @@ fun Member(
             Column {
                 Text(
                     text = line1,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier
                         .padding(8.dp)
                         .testTag("line_1_$testId")
                 )
                 Text(
                     text = line2,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier
                         .padding(8.dp)
                         .testTag("line_2_$testId")
