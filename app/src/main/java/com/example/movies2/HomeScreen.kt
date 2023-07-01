@@ -156,7 +156,7 @@ fun MoviePosterImageItem(
 @Preview
 @Composable
 fun HomeSectionPreview() {
-    MoviesTheme {
+    MaterialTheme {
         HomeSection(
             R.string.now_showing,
             HomeState.Ready((0..4).map {

@@ -172,11 +172,3 @@ fun ShowAllMovies(
         }
     }
 }
-
-@Preview
-@Composable
-fun FullListPreview() {
-    MoviesTheme {
-        SeeAllUpcomingScreen()
-    }
-}
