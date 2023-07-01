@@ -293,7 +293,8 @@ fun Member(
     testId: Int
 ) {
     Surface(
-        modifier.fillMaxWidth(), RoundedCornerShape(8.dp),
+        modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.colorScheme.surfaceVariant
     ) {
         Row(modifier = modifier.padding(4.dp)) {
