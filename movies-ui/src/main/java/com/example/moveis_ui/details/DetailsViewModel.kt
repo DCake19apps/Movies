@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movie_domain.details.GetMoviesDetailsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val getMoviesDetailsUseCase: GetMoviesDetailsUseCase
+    private val getMoviesDetailsUseCase: GetMoviesDetailsUseCase,
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ): ViewModel() {
 
     private val _detailsFlow = MutableStateFlow<DetailsState>(DetailsState.Loading)
@@ -26,11 +28,12 @@ class DetailsViewModel @Inject constructor(
 
     init {
         savedStateHandle.get<String>("movieId")?.toInt()?.let { id ->
-
-            viewModelScope.launch(CoroutineExceptionHandler { coroutineContext, throwable ->
-                _detailsFlow.value = DetailsState.Error
-            }) {
-                withContext(Dispatchers.Default) {
+            viewModelScope.launch(
+                CoroutineExceptionHandler { coroutineContext, throwable ->
+                    _detailsFlow.value = DetailsState.Error
+                }
+            ) {
+                withContext(defaultDispatcher) {
                     val details = getMoviesDetailsUseCase.invoke(id)
                     _detailsFlow.value = DetailsState.Ready(details)
                 }
