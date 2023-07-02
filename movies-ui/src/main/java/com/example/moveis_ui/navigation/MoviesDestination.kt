@@ -1,4 +1,4 @@
-package com.example.movies2.navigation
+package com.example.moveis_ui.navigation
 
 object MoviesDestination {
     const val HOME = "home"

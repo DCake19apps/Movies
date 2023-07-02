@@ -96,7 +96,6 @@ fun MoviesGridList(
     onClickRetry: () -> Unit = {},
     onClickItem: (id: Int) -> Unit = {}
 ) {
-
     when (state) {
         MovieListState.Error -> {
             ShowAllError(onClickRetry = onClickRetry)
