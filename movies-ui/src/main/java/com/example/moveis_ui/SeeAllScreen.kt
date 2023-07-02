@@ -10,10 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.moveis_ui.seeall.UpcomingViewModel
-import com.example.movies2.ui.theme.MoviesTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.unit.dp
 import com.example.moveis_ui.MovieListState
@@ -34,6 +32,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.ui.res.stringResource
 import com.example.movie_domain.list.MovieEntity
 import androidx.compose.ui.platform.LocalConfiguration
+import com.example.moveis_ui.MoviePosterImageItem
+import com.example.moveis_ui.R
 import com.example.moveis_ui.seeall.NowPlayingViewModel
 import com.example.moveis_ui.seeall.PopularViewModel
 import com.example.moveis_ui.seeall.TopRatedViewModel

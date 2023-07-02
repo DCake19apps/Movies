@@ -1,4 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="now_showing">Now Showing</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="popular">Popular</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="see_all">See all</string>
+    <string name="error_loading">Error loading</string>
+    <string name="retry">Retry</string>
+
+    <string name="home">Home</string>
+    <string name="search">Search</string>
+    <string name="discover">Discover</string>
+
+    <string name="minimum_score">Minimum Vote Average</string>
+    <string name="select_genres">Select Genres</string>
+    <string name="sort_by">Sort By</string>
+
+    <string name="popularity">Popularity</string>
+    <string name="vote_average">Vote Average</string>
+
+    <string name="mins">%1$s mins</string>
+    <string name="budget">Budget: %1$s</string>
+    <string name="revenue">Revenue: %1$s</string>
+
+    <string name="overview">Overview</string>
+    <string name="cast">Cast</string>
+    <string name="crew">Crew</string>
 
 </resources>

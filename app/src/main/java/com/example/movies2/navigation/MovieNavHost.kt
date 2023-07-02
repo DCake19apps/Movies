@@ -23,6 +23,9 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.moveis_ui.DiscoverScreen
+import com.example.moveis_ui.HomeScreen
+import com.example.moveis_ui.MovieDetailsScreen
 import com.example.movies2.navigation.MoviesDestination
 
 @OptIn(ExperimentalMaterial3Api::class)

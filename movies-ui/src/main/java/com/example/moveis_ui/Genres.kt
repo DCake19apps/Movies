@@ -1,4 +1,4 @@
-package com.example.movies2
+package com.example.moveis_ui
 
 enum class Genres(val id: Int, val genreName: String) {
     ACTION(28, "Action"),

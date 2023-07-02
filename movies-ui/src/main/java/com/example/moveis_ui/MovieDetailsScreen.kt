@@ -1,4 +1,4 @@
-package com.example.movies2
+package com.example.moveis_ui
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -43,18 +43,18 @@ import com.example.moveis_ui.details.CreditsViewModel
 import com.example.moveis_ui.details.CrewState
 import com.example.moveis_ui.details.DetailsState
 import com.example.moveis_ui.details.DetailsViewModel
+import com.example.moveis_ui.theme.ratingAverage
+import com.example.moveis_ui.theme.ratingBad
+import com.example.moveis_ui.theme.ratingDreadful
+import com.example.moveis_ui.theme.ratingExcellent
+import com.example.moveis_ui.theme.ratingGood
+import com.example.moveis_ui.theme.ratingVeryBad
+import com.example.moveis_ui.theme.ratingVeryGood
 import com.example.movie_domain.details.MoviesDetailsEntity
 import com.example.movie_domain.people.CastEntity
 import com.example.movie_domain.people.CrewEntity
-import com.example.movies2.ui.theme.ratingAverage
-import com.example.movies2.ui.theme.ratingBad
-import com.example.movies2.ui.theme.ratingDreadful
-import com.example.movies2.ui.theme.ratingExcellent
-import com.example.movies2.ui.theme.ratingGood
-import com.example.movies2.ui.theme.ratingVeryBad
-import com.example.movies2.ui.theme.ratingVeryGood
+import com.example.movies2.PageLoading
 import kotlinx.coroutines.launch
-
 
 @Composable
 fun MovieDetailsScreen(

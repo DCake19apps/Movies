@@ -1,4 +1,4 @@
-package com.example.movies2
+package com.example.moveis_ui
 
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
