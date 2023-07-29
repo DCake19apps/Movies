@@ -28,14 +28,18 @@ class TopRatedViewModel @Inject constructor(
     }
 
     fun initialize() {
+        load(1)
+    }
+
+    fun load(page: Int) {
         viewModelScope.launch(CoroutineExceptionHandler {
                 coroutineContext, throwable ->
             _seeAllTopRatedFlow.value = MovieListState.Error
         }) {
             withContext(Dispatchers.Default) {
-                val movies = getTopRatedMoviesUseCase.invoke()
+                val movies = getTopRatedMoviesUseCase.invoke(page)
 
-                _seeAllTopRatedFlow.value = MovieListState.Ready(movies)
+                _seeAllTopRatedFlow.value = MovieListState.Ready(movies.list, movies.complete, movies.lastPage)
             }
         }.invokeOnCompletion {
             if (it !=null && it.cause !is CancellationException) {

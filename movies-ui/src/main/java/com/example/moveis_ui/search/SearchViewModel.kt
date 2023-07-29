@@ -19,20 +19,26 @@ class SearchViewModel @Inject constructor(
     private val getSearchResultsUseCase: GetSearchResultsUseCase
 ): ViewModel() {
 
-    private val _searchFlow = MutableStateFlow<MovieListState>(MovieListState.Ready(emptyList()))
+    private val _searchFlow = MutableStateFlow<MovieListState>(MovieListState.Ready(emptyList(), false, 0))
     val searchFlow: StateFlow<MovieListState>
         get() = _searchFlow
 
+    private var currentSearchTerm = ""
+
     fun search(term: String) {
+        load(1)
+    }
+
+    fun load(page: Int) {
         _searchFlow.value = MovieListState.Loading
         viewModelScope.launch(CoroutineExceptionHandler {
                 coroutineContext, throwable ->
             _searchFlow.value = MovieListState.Error
         }) {
             withContext(Dispatchers.Default) {
-                val movies = getSearchResultsUseCase.invoke(term)
+                val movies = getSearchResultsUseCase.invoke(currentSearchTerm, page)
 
-                _searchFlow.value = MovieListState.Ready(movies)
+                _searchFlow.value = MovieListState.Ready(movies.list, movies.complete, movies.lastPage)
             }
         }.invokeOnCompletion {
             if (it !=null && it.cause !is CancellationException) {

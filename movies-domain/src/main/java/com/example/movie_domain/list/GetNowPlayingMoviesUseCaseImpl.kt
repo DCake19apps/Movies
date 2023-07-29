@@ -4,7 +4,7 @@ class GetNowPlayingMoviesUseCaseImpl(
     private val repo: MoviesRepository
     ): GetNowPlayingMoviesUseCase {
 
-    override suspend fun invoke(): List<MovieEntity> {
-        return repo.getNowShowing()
+    override suspend fun invoke(page: Int): Movies {
+        return repo.getNowShowing(page)
     }
 }

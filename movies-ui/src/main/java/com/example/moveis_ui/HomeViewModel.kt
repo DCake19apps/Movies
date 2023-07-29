@@ -8,6 +8,7 @@ import com.example.movie_domain.list.GetPopularMoviesUseCase
 import com.example.movie_domain.list.GetTopRatedMoviesUseCase
 import com.example.movie_domain.list.GetUpcomingMoviesUseCase
 import com.example.movie_domain.list.MovieEntity
+import com.example.movie_domain.list.Movies
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
@@ -65,14 +66,14 @@ class HomeViewModel @Inject constructor(
         launch(_popularFlow) { getPopularMoviesUseCase.invoke() }
     }
 
-    private fun launch(flow: MutableStateFlow<HomeState>, get: suspend () -> List<MovieEntity>) {
+    private fun launch(flow: MutableStateFlow<HomeState>, get: suspend () -> Movies) {
         viewModelScope.launch(CoroutineExceptionHandler {
                 coroutineContext, throwable ->
             flow.value = HomeState.Error
         }) {
             withContext(Dispatchers.Default) {
                 val movies = get()
-                flow.value = HomeState.Ready(movies)
+                flow.value = HomeState.Ready(movies.list)
             }
         }.invokeOnCompletion {
             if (it !=null && it.cause !is CancellationException) {

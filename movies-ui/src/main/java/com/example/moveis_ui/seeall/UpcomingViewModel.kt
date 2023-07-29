@@ -29,6 +29,15 @@ class UpcomingViewModel @Inject constructor(
     }
 
     fun initialize() {
+        load(1)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.v("UpcomingViewModel", "onCleared")
+    }
+
+    fun load(page: Int) {
         Log.v("UpcomingViewModel", "init")
         viewModelScope.launch(CoroutineExceptionHandler {
                 coroutineContext, throwable ->
@@ -36,9 +45,9 @@ class UpcomingViewModel @Inject constructor(
             _seeAllUpcomingFlow.value = MovieListState.Error
         }) {
             withContext(Dispatchers.Default) {
-                val movies = getUpcomingMoviesUseCase.invoke()
+                val movies = getUpcomingMoviesUseCase.invoke(page)
 
-                _seeAllUpcomingFlow.value = MovieListState.Ready(movies)
+                _seeAllUpcomingFlow.value = MovieListState.Ready(movies.list, movies.complete, movies.lastPage)
             }
         }.invokeOnCompletion {
             if (it !=null && it.cause !is CancellationException) {
@@ -46,10 +55,5 @@ class UpcomingViewModel @Inject constructor(
             }
             Log.v("UpcomingViewModel", "completion: ${it?.message}")
         }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        Log.v("UpcomingViewModel", "onCleared")
     }
 }

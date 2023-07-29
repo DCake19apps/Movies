@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.example.movie_domain.list.MovieEntity
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.testTag
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 
@@ -139,7 +140,7 @@ fun MoviePosterImageItem(
     modifier: Modifier = Modifier,
     onClick: (id: Int) -> Unit
 ) {
-    Surface(modifier, RoundedCornerShape(4.dp)) {
+    Surface(modifier.testTag("poster_${item.id}"), RoundedCornerShape(4.dp)) {
         val painter = rememberAsyncImagePainter(item.posterPath)
         Image(
             painter = painter,

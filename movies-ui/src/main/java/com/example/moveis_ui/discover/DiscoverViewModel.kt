@@ -21,19 +21,29 @@ class DiscoverViewModel @Inject constructor(
     private val getDiscoverResultsUseCase: GetDiscoverResultsUseCase
 ): ViewModel() {
 
-    private val _discoverFlow = MutableStateFlow<MovieListState>(MovieListState.Ready(emptyList()))
+    private val _discoverFlow = MutableStateFlow<MovieListState>(MovieListState.Ready(emptyList(), false, 0))
     val discoverFlow: StateFlow<MovieListState>
         get() = _discoverFlow
 
+    private var currentFilter: DiscoverFilter? = null
+
     fun discover(filter: DiscoverFilter) {
+        currentFilter = filter
+        load(1)
+    }
+
+    fun load(page: Int) {
         viewModelScope.launch(CoroutineExceptionHandler {
                 coroutineContext, throwable ->
             _discoverFlow.value = MovieListState.Error
         }) {
             withContext(Dispatchers.Default) {
-                val movies = getDiscoverResultsUseCase.invoke(filter)
+                currentFilter?.let {
+                    val movies = getDiscoverResultsUseCase.invoke(it, 1)
 
-                _discoverFlow.value = MovieListState.Ready(movies)
+                    _discoverFlow.value =
+                        MovieListState.Ready(movies.list, movies.complete, movies.lastPage)
+                }
             }
         }.invokeOnCompletion {
             if (it !=null && it.cause !is CancellationException) {

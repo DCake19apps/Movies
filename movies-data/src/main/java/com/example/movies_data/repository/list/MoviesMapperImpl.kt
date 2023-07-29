@@ -1,12 +1,20 @@
 package com.example.movies_data.repository.list
 
 import com.example.movie_domain.list.MovieEntity
+import com.example.movie_domain.list.Movies
 import com.example.movies_data.apipojo.MovieResult
 import com.example.movies_data.apipojo.MoviesListResult
 
 class MoviesMapperImpl: MoviesMapper {
-    override fun map(moviesListResult: MoviesListResult): List<MovieEntity> {
-        return moviesListResult.results?.mapNotNull { map(it) }?: emptyList()
+    override fun map(moviesListResults: List<MoviesListResult>): Movies {
+        if (moviesListResults.isEmpty())
+            return Movies(emptyList(), true, 1)
+        return Movies(
+            moviesListResults.map { it.results?: emptyList() }.flatten().mapNotNull { map(it) },
+            moviesListResults.last().page == moviesListResults.last().totalPages,
+            moviesListResults.last().page?:1
+        )
+        //return moviesListResult.results?.mapNotNull { map(it) }?: emptyList()
     }
 
     private fun map(result: MovieResult?): MovieEntity? {

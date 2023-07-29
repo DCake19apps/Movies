@@ -73,7 +73,8 @@ fun DiscoverScreen(
         MoviesGridList(
             state = discoverResults,
             onClickRetry = { },
-            onClickItem = onClickItem
+            onClickItem = onClickItem,
+            loadMore = { page -> discoverViewModel.load(page) }
         )
         FloatingActionButton(
             onClick = {
