@@ -19,19 +19,26 @@ class DataRetrieverManager<T> (private val dispatcher: CoroutineDispatcher = Dis
 
     @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun get(retrieve: suspend () -> T): T {
+        println("discover_debug Retriever: get")
         if (channel.isClosedForReceive) {
+            println("discover_debug Retriever: channel is closed")
             channel = Channel()
         }
 
+        channel
+
         if (job?.isActive != true) {
+            println("discover_debug Retriever: job is not active")
             job = CoroutineScope(dispatcher).launch(CoroutineExceptionHandler {
                     coroutineContext, throwable ->
+                println("discover_debug Retriever exception: ${throwable.message}")
                 channel.cancel(CancellationException(null, throwable))
             }) {
                 val t = retrieve()
-
+                println("discover_debug Retriever: retrieve")
                 channel.let {
                     if (!it.isClosedForSend) {
+                        println("discover_debug Retriever: channel is not closed for send")
                         it.send(t)
                         it.close()
                     }
@@ -41,8 +48,10 @@ class DataRetrieverManager<T> (private val dispatcher: CoroutineDispatcher = Dis
 
         return coroutineScope {
             coroutineContext.job.invokeOnCompletion {
+                println("discover_debug Retriever: channel close ${it?.message}")
                 channel.close()
             }
+            println("discover_debug Retriever: channel receive")
             channel.receive()
         }
     }

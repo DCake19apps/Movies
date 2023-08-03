@@ -5,6 +5,7 @@ import com.example.movies_data.apipojo.MovieDetailsResult
 
 class MoviesDetailsMapperImpl: MoviesDetailsMapper {
     override fun map(result: MovieDetailsResult): MoviesDetailsEntity {
+        println("details_debug Repo: map")
         val voteAverage = if (
             result.voteAverage == null ||
             result.voteCount == null ||

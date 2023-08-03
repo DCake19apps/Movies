@@ -1,5 +1,6 @@
 package com.example.moveis_ui
 
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
@@ -90,6 +91,7 @@ class FullDetailTest {
 
         composeTestRule.setContent {
             MovieDetailsScreen(
+                WindowWidthSizeClass.Compact,
                 DetailsState.Ready(mde),
                 CastState.Ready(cast),
                 CrewState.Loading

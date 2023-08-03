@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyHorizontalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.FilterList
@@ -53,33 +55,22 @@ fun DiscoverScreen(
     discoverViewModel: DiscoverViewModel = hiltViewModel(),
     onClickItem: (id: Int) -> Unit = {}
 ) {
-    val discoverResults by discoverViewModel.discoverFlow.collectAsState()
-
     var displayDialog by rememberSaveable { mutableStateOf(true) }
 
+    val discoverResults by discoverViewModel.discoverFlow.collectAsState()
+
     Box(modifier = Modifier.fillMaxSize()) {
-        if (displayDialog) {
-            Dialog(
-                properties = DialogProperties(),
-                onDismissRequest = { displayDialog = false }
-            ) {
-                DiscoverDialog(modifier) {
-                        sortBy: SortBy, minVoteAverage: Float, genres: List<Int> ->
-                    discoverViewModel.discover(DiscoverFilter(sortBy, minVoteAverage, genres, null))
-                    displayDialog = false
-                }
-            }
-        }
         MoviesGridList(
             state = discoverResults,
-            onClickRetry = { },
-            onClickItem = onClickItem
+            onClickRetry = {  },
+            onClickItem = onClickItem,
+            loadMore = { page -> discoverViewModel.load(page) }
         )
         FloatingActionButton(
             onClick = {
                 displayDialog = true
             },
-            containerColor = androidx.compose.material3.MaterialTheme.colorScheme.secondary,
+            containerColor = MaterialTheme.colorScheme.secondary,
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier
                 .padding(16.dp)
@@ -90,6 +81,18 @@ fun DiscoverScreen(
                 contentDescription = "Filter",
                 tint = Color.White,
             )
+        }
+        if (displayDialog) {
+            Dialog(
+                properties = DialogProperties(usePlatformDefaultWidth = false),
+                onDismissRequest = { displayDialog = false }
+            ) {
+                DiscoverDialog(modifier.padding(16.dp)) {
+                        sortBy: SortBy, minVoteAverage: Float, genres: List<Int> ->
+                    discoverViewModel.discover(DiscoverFilter(sortBy, minVoteAverage, genres, null))
+                    displayDialog = false
+                }
+            }
         }
     }
 }
@@ -106,9 +109,19 @@ fun DiscoverDialog(
 
     Surface(modifier.fillMaxWidth(), RoundedCornerShape(4.dp)) {
         Column {
-            SortBy(modifier = Modifier.align(Alignment.CenterHorizontally)) { index: Int -> sortBy = SortBy.values()[index] }
-            MinimumScore { score: Float -> minScore = score }
-            SelectGenres({ genres -> selectedGenres.add(genres) }, { genres -> selectedGenres.remove(genres) })
+            Column(
+                modifier = modifier
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                SortBy(modifier = Modifier.align(Alignment.CenterHorizontally)) { index: Int ->
+                    sortBy = SortBy.values()[index]
+                }
+                MinimumScore { score: Float -> minScore = score }
+                SelectGenres(
+                    { genres -> selectedGenres.add(genres) },
+                    { genres -> selectedGenres.remove(genres) })
+            }
             TextButton(
                 onClick = { discover(sortBy, minScore, selectedGenres.map { it.id }) },
                 modifier = Modifier

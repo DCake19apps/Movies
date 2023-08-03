@@ -1,5 +1,9 @@
 package com.example.moveis_ui
 
+
+import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasText
@@ -38,7 +42,7 @@ class DetailTest {
         )
 
         composeTestRule.setContent {
-            MovieOverview(state = DetailsState.Ready(mde))
+            MovieOverview(WindowWidthSizeClass.Compact, state = DetailsState.Ready(mde))
         }
 
         composeTestRule
@@ -73,7 +77,7 @@ class DetailTest {
         )
 
         composeTestRule.setContent {
-            MovieOverview(state = DetailsState.Ready(mde))
+            MovieOverview(WindowWidthSizeClass.Compact, state = DetailsState.Ready(mde))
         }
 
         composeTestRule
@@ -115,7 +119,7 @@ class DetailTest {
         }
 
         composeTestRule.setContent {
-            MovieCast(state = CastState.Ready(cast))
+            MovieCast(WindowWidthSizeClass.Compact, state = CastState.Ready(cast))
         }
 
         for (position in range) {

@@ -28,14 +28,18 @@ class PopularViewModel @Inject constructor(
     }
 
     fun initialize() {
+        load(1)
+    }
+
+    fun load(page: Int) {
         viewModelScope.launch(CoroutineExceptionHandler {
                 coroutineContext, throwable ->
             _seeAllPopularFlow.value = MovieListState.Error
         }) {
             withContext(Dispatchers.Default) {
-                val movies = getPopularMoviesUseCase.invoke()
+                val movies = getPopularMoviesUseCase.invoke(page)
 
-                _seeAllPopularFlow.value = MovieListState.Ready(movies)
+                _seeAllPopularFlow.value = MovieListState.Ready(movies.list, movies.complete, movies.lastPage)
             }
         }.invokeOnCompletion {
             if (it !=null && it.cause !is CancellationException) {

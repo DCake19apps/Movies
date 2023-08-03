@@ -12,7 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -24,6 +25,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -39,7 +41,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.moveis_ui.details.CastState
-import com.example.moveis_ui.details.CreditsViewModel
 import com.example.moveis_ui.details.CrewState
 import com.example.moveis_ui.details.DetailsState
 import com.example.moveis_ui.details.DetailsViewModel
@@ -58,19 +59,23 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MovieDetailsScreen(
-    detailsViewModel: DetailsViewModel = hiltViewModel(),
-    creditsViewModel: CreditsViewModel = hiltViewModel()
+    widthSizeClass: WindowWidthSizeClass,
+    detailsViewModel: DetailsViewModel = hiltViewModel()
 ) {
     val overview by detailsViewModel.detailsFlow.collectAsState()
-    val cast by creditsViewModel.castFlow.collectAsState()
-    val crew by creditsViewModel.crewFlow.collectAsState()
+    val cast by detailsViewModel.castFlow.collectAsState()
+    val crew by detailsViewModel.crewFlow.collectAsState()
 
-    MovieDetailsScreen(overview, cast, crew)
+    MovieDetailsScreen(widthSizeClass, overview, cast, crew)
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MovieDetailsScreen(overview: DetailsState, cast: CastState, crew: CrewState) {
+fun MovieDetailsScreen(
+    widthSizeClass: WindowWidthSizeClass,
+    overview: DetailsState,
+    cast: CastState, crew: CrewState
+) {
     val pagerState = rememberPagerState(0)
     val coroutineScope = rememberCoroutineScope()
 
@@ -90,9 +95,9 @@ fun MovieDetailsScreen(overview: DetailsState, cast: CastState, crew: CrewState)
                 contentAlignment = Alignment.TopCenter
             ) {
                 when (pageIndex) {
-                    0 -> MovieOverview(overview)
-                    1 -> MovieCast(cast)
-                    2 -> MovieCrew(crew)
+                    0 -> MovieOverview(widthSizeClass = widthSizeClass, overview)
+                    1 -> MovieCast(widthSizeClass = widthSizeClass, cast)
+                    2 -> MovieCrew(widthSizeClass = widthSizeClass, crew)
                 }
             }
         }
@@ -120,50 +125,107 @@ fun Tabs(selectedTabIndex: Int, onSelectedTab: (index: Int) -> Unit) {
 }
 
 @Composable
-fun MovieOverview(state: DetailsState, modifier: Modifier = Modifier) {
+fun MovieOverview(
+    widthSizeClass: WindowWidthSizeClass,
+    state: DetailsState,
+    modifier: Modifier = Modifier
+) {
     when (state) {
         DetailsState.Error -> {}
         DetailsState.Loading -> PageLoading()
-        is DetailsState.Ready -> MovieOverview(details = state.details)
+        is DetailsState.Ready -> MovieOverview(widthSizeClass = widthSizeClass, details = state.details)
     }
 }
 
 @Composable
-fun MovieCast(state: CastState, modifier: Modifier = Modifier) {
+fun MovieCast(
+    widthSizeClass: WindowWidthSizeClass,
+    state: CastState,
+    modifier: Modifier = Modifier
+) {
     when (state) {
         CastState.Error -> {}
         CastState.Loading -> PageLoading()
-        is CastState.Ready -> CastMembers(castMembers = state.cast)
+        is CastState.Ready -> CastMembers(
+            castMembers = state.cast,
+            columns = if (widthSizeClass == WindowWidthSizeClass.Compact) 1 else 2
+        )
     }
 }
 
 @Composable
-fun MovieCrew(state: CrewState, modifier: Modifier = Modifier) {
+fun MovieCrew(
+    widthSizeClass: WindowWidthSizeClass,
+    state: CrewState,
+    modifier: Modifier = Modifier
+) {
     when (state) {
         CrewState.Error -> {}
         CrewState.Loading -> PageLoading()
-        is CrewState.Ready -> CrewMembers(crewMembers = state.crew)
+        is CrewState.Ready -> CrewMembers(
+            crewMembers = state.crew,
+            columns = if (widthSizeClass == WindowWidthSizeClass.Compact) 1 else 2
+        )
     }
 }
 
 @Composable
-fun MovieOverview(details: MoviesDetailsEntity, modifier: Modifier = Modifier) {
-    val ratingNum = details.rating.toFloat()
+fun MovieOverview(
+    widthSizeClass: WindowWidthSizeClass,
+    details: MoviesDetailsEntity,
+    modifier: Modifier = Modifier
+) {
+    if (widthSizeClass == WindowWidthSizeClass.Compact) {
+        Column(
+            modifier = modifier
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            MovieOverviewData(
+                details = details,
+                modifier = modifier
+            )
+            Text(
+                text = details.overview,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .testTag("overview")
+            )
+        }
+    } else {
+        Row(
+            modifier = modifier.padding(16.dp)
+        ) {
+            MovieOverviewData(details = details)
+            Text(
+                text = details.overview,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .testTag("overview")
+            )
+        }
+    }
+}
+
+@Composable
+fun MovieOverviewData(
+    details: MoviesDetailsEntity,
+    modifier: Modifier = Modifier
+) {
+    val ratingNum = if (details.rating.isBlank()) -1f else details.rating.toFloat()
     val colors =
-        if (ratingNum >= 9) Pair(ratingExcellent, Color.Black)
+        if (ratingNum < 0) Pair(Color.White, Color.White)
+        else if (ratingNum >= 9) Pair(ratingExcellent, Color.Black)
         else if (ratingNum >= 8) Pair(ratingVeryGood, Color.Black)
         else if (ratingNum >= 7) Pair(ratingGood, Color.Black)
         else if (ratingNum >= 6) Pair(ratingAverage, Color.Black)
         else if (ratingNum >= 5) Pair(ratingBad, Color.Black)
         else if (ratingNum >= 4) Pair(ratingVeryBad, Color.White)
         else Pair(ratingDreadful, Color.White)
-
-    Column(
-        modifier = modifier
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState())
-    ) {
-        Row(modifier = modifier.fillMaxWidth()) {
+    Column {
+        Row(modifier = modifier) {
             Surface(modifier, RoundedCornerShape(4.dp)) {
                 val painter = rememberAsyncImagePainter(details.posterPath)
                 Image(
@@ -217,13 +279,6 @@ fun MovieOverview(details: MoviesDetailsEntity, modifier: Modifier = Modifier) {
                     .testTag("budget")
             )
         }
-        Text(
-            text = details.overview,
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier
-                .padding(start = 16.dp)
-                .testTag("overview")
-        )
     }
 }
 
@@ -255,11 +310,17 @@ fun Score(
 
 
 @Composable
-fun CastMembers(castMembers: List<CastEntity>, modifier: Modifier = Modifier) {
+fun CastMembers(
+    castMembers: List<CastEntity>,
+    columns: Int,
+    modifier: Modifier = Modifier
+) {
 
-    LazyColumn(
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(columns),
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
         modifier = modifier.testTag("cast_members")
     ) {
         items(castMembers.size) {
@@ -270,11 +331,17 @@ fun CastMembers(castMembers: List<CastEntity>, modifier: Modifier = Modifier) {
 
 }
 @Composable
-fun CrewMembers(crewMembers: List<CrewEntity>, modifier: Modifier = Modifier) {
-    
-    LazyColumn(              
+fun CrewMembers(
+    crewMembers: List<CrewEntity>,
+    columns: Int,
+    modifier: Modifier = Modifier
+) {
+
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(columns),
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 8.dp),
         modifier = modifier
     ) {
         items(crewMembers.size) {

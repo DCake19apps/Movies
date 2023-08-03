@@ -2,6 +2,7 @@ package com.example.movies_data.repository.list
 
 import com.example.movie_domain.list.DiscoverFilter
 import com.example.movie_domain.list.MovieEntity
+import com.example.movie_domain.list.Movies
 import com.example.movie_domain.list.MoviesRepository
 import com.example.movie_domain.list.SortBy
 import com.example.movies_data.apikey.ApiKeyProvider
@@ -14,177 +15,68 @@ class MoviesRepositoryImpl(
     private val api: MoviesApi,
     private val cache: MoviesCache,
     private val mapper: MoviesMapper,
-    private val nowPlayingDataRetrieverManager: DataRetrieverManager<List<MovieEntity>>,
-    private val upcomingDataRetrieverManager: DataRetrieverManager<List<MovieEntity>>,
-    private val topRatedDataRetrieverManager: DataRetrieverManager<List<MovieEntity>>,
-    private val popularDataRetrieverManager: DataRetrieverManager<List<MovieEntity>>,
-    private val discoverDataRetrieverManager: DataRetrieverManager<List<MovieEntity>>,
-    private val searchDataRetrieverManager: DataRetrieverManager<List<MovieEntity>>
+    private val nowPlayingDataRetrieverManager: DataRetrieverManager<Movies>,
+    private val upcomingDataRetrieverManager: DataRetrieverManager<Movies>,
+    private val topRatedDataRetrieverManager: DataRetrieverManager<Movies>,
+    private val popularDataRetrieverManager: DataRetrieverManager<Movies>
     ): MoviesRepository {
 
-    override suspend fun getNowShowing(): List<MovieEntity> {
-        return nowPlayingDataRetrieverManager.get{ retrieve(MovieListType.NowPlaying) }
+    override suspend fun getNowShowing(page: Int): Movies {
+        return nowPlayingDataRetrieverManager.get{ retrieve(MovieListType.NowPlaying, page) }
     }
 
-    override suspend fun getUpcoming(): List<MovieEntity> {
-        return upcomingDataRetrieverManager.get{ retrieve(MovieListType.Upcoming) }
+    override suspend fun getUpcoming(page: Int): Movies {
+        return upcomingDataRetrieverManager.get{ retrieve(MovieListType.Upcoming, page) }
     }
 
-    override suspend fun getTopRated(): List<MovieEntity> {
-        return topRatedDataRetrieverManager.get{ retrieve(MovieListType.TopRated) }
+    override suspend fun getTopRated(page: Int): Movies {
+        return topRatedDataRetrieverManager.get{ retrieve(MovieListType.TopRated, page) }
     }
 
-    override suspend fun getPopular(): List<MovieEntity> {
-        return popularDataRetrieverManager.get{ retrieve(MovieListType.Popular) }
+    override suspend fun getPopular(page: Int): Movies {
+        return popularDataRetrieverManager.get{ retrieve(MovieListType.Popular, page) }
     }
 
-    override suspend fun getDiscoverResults(filter: DiscoverFilter): List<MovieEntity> {
-        return discoverDataRetrieverManager.get{ retrieve(MovieListType.DiscoverResults(filter)) }
+    override suspend fun getDiscoverResults(filter: DiscoverFilter, page: Int): Movies {
+        return retrieve(MovieListType.DiscoverResults(filter), page)
     }
 
-    override suspend fun getSearchResults(term: String): List<MovieEntity> {
-        return searchDataRetrieverManager.get{ retrieve(MovieListType.SearchResults(term)) }
+    override suspend fun getSearchResults(term: String, page: Int): Movies {
+        return retrieve(MovieListType.SearchResults(term), page)
     }
 
-    private suspend fun retrieve(type: MovieListType): List<MovieEntity> {
+    private suspend fun retrieve(type: MovieListType, page: Int): Movies {
         val cachedMovies = cache.get(type)
-        return if (cachedMovies == null) {
+
+        return if (cachedMovies.isEmpty() || page > ((cachedMovies.last().page) ?: 0)) {
             val apiMovies = when(type) {
-                MovieListType.NowPlaying -> api.getNowPlaying(apiKeyProvider.getApiKey(), 1)
-                MovieListType.Upcoming -> api.getUpcoming(apiKeyProvider.getApiKey(), 1)
-                MovieListType.Popular -> api.getPopular(apiKeyProvider.getApiKey(), 1)
-                MovieListType.TopRated -> api.getTopRated(apiKeyProvider.getApiKey(), 1)
-                is MovieListType.DiscoverResults -> api.getDiscoverResults(
+                MovieListType.NowPlaying -> api.getNowPlaying(apiKeyProvider.getApiKey(), page)
+                MovieListType.Upcoming -> api.getUpcoming(apiKeyProvider.getApiKey(), page)
+                MovieListType.Popular -> api.getPopular(apiKeyProvider.getApiKey(), page)
+                MovieListType.TopRated -> api.getTopRated(apiKeyProvider.getApiKey(), page)
+                is MovieListType.DiscoverResults -> {
+                    println("discover_debug Repo: retrieve")
+                    api.getDiscoverResults(
                     apiKeyProvider.getApiKey(),
                     if (type.filter.sortBy == SortBy.POPULARITY) "popularity.desc" else "vote_average.desc",
                     type.filter.minVoteAverage.toString(),
                     if (type.filter.minVoteAverage > 1) "10" else "0",
                     type.filter.genres.toString().drop(1).dropLast(1).replace(" ", ""),
                     type.filter.releaseYear?.toString()?:"",
-                    1
-                )
+                    page
+                )}
                 is MovieListType.SearchResults ->
                     api.getSearchResults(
                         apiKeyProvider.getApiKey(),
                         type.term,
-                        1
+                        page
                     )
             }
             cache.save(type, apiMovies)
-            mapper.map(apiMovies)
+            mapper.map(cache.get(type))
         } else {
             mapper.map(cachedMovies)
         }
     }
 
-//    @OptIn(ExperimentalCoroutinesApi::class)
-//    override suspend fun getUpcoming(): List<MovieEntity> {
-//        if (channel.isClosedForReceive) {
-//            channel = Channel()
-//        }
-//
-//        if (job?.isActive != true) {
-//            job = CoroutineScope(Dispatchers.IO).launch {
-//                val cachedMovies = cache.get()
-//                val movies = if (cachedMovies == null) {
-//                    val apiMovies = api.getUpcoming(apiKeyProvider.getApiKey(), 1)
-//                    cache.save(apiMovies)
-//                    mapper.map(apiMovies)
-//                } else {
-//                    mapper.map(cachedMovies)
-//                }
-//                channel.let {
-//                    if (!it.isClosedForSend) {
-//                        it.send(movies)
-//                        it.close()
-//                    }
-//                }
-//            }
-//        }
-//        return coroutineScope {
-//            coroutineContext.job.invokeOnCompletion {
-//                channel.close()
-//            }
-//            channel.receive()
-//        }
-//    }
-
-    /*
-    override suspend fun getUpcoming(): List<MovieEntity> {
-        return coroutineScope {
-            println("Upcoming: MoviesRepository:getUpcoming")
-            val cachedMovies = cache.get()
-
-            if (cachedMovies == null) {
-                val apiMovies = api.getUpcoming(apiKeyProvider.getApiKey(), 1)
-                delay(5000)
-                cache.save(apiMovies)
-                mapper.map(apiMovies)
-            } else {
-                mapper.map(cachedMovies)
-            }
-        }
-    }
-*/
-    /*
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override suspend fun getUpcoming(): List<MovieEntity> {
-        CoroutineScope(Dispatchers.IO).launch {
-            println("Upcoming: MoviesRepository:getUpcoming")
-            channel = produce {
-                val cachedMovies = cache.get()
-                if (cachedMovies == null) {
-                    val apiMovies = api.getUpcoming(apiKeyProvider.getApiKey(), 1)
-                    //delay(5000)
-                    cache.save(apiMovies)
-                    mapper.map(apiMovies)
-                } else {
-                    mapper.map(cachedMovies)
-                }
-            }
-        }
-        return coroutineScope {
-            channel.receive()
-        }
-    }
-*/
-//    @OptIn(ExperimentalCoroutinesApi::class)
-//    override suspend fun getUpcoming(): List<MovieEntity> {
-//        println("Upcoming: closed for receive: ${channel.isClosedForReceive}")
-//
-//        if (channel.isClosedForReceive) {
-//            channel = Channel()
-//        }
-//
-//        val page = 1
-//        if (job?.isActive != true) {
-//            job = CoroutineScope(Dispatchers.IO).launch {
-//                println("Upcoming: MoviesRepository:getUpcoming")
-//                val cachedMovies = cache.get()
-//                val movies = if (cachedMovies == null) {
-//                    val apiMovies = api.getUpcoming(apiKeyProvider.getApiKey(), page)
-//                    delay(10000)
-//                    cache.save(apiMovies)
-//                    mapper.map(apiMovies)
-//                } else {
-//                    mapper.map(cachedMovies)
-//                }
-//                println("Upcoming: closed for send: ${channel.isClosedForSend}")
-//                val c = channel
-//                if (!c.isClosedForSend) {
-//                    c.send(movies)
-//                    println("Upcoming: sent")
-//                    c.close()
-//                }
-//            }
-//            job?.invokeOnCompletion { println("Upcoming: repo job completed") }
-//        }
-//        return coroutineScope {
-//            coroutineContext.job.invokeOnCompletion {
-//                println("Upcoming: job completed")
-//                channel.close()
-//            }
-//            channel.receive()
-//        }
-//    }
 }

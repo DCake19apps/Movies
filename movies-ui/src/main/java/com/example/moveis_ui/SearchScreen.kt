@@ -54,7 +54,8 @@ fun SearchScreen(
         MoviesGridList(
             state = searchResults,
             onClickRetry = {  },
-            onClickItem = onClickItem
+            onClickItem = onClickItem,
+            loadMore = { page -> viewModel.load(page) }
         )
     }
 

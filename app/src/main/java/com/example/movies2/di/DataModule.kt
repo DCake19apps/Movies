@@ -46,8 +46,6 @@ class DataModule {
             DataRetrieverManager(),
             DataRetrieverManager(),
             DataRetrieverManager(),
-            DataRetrieverManager(),
-            DataRetrieverManager(),
             DataRetrieverManager()
         )
     }

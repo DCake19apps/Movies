@@ -1,5 +1,6 @@
 package com.example.moveis_ui.navigation
 
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -19,6 +20,7 @@ import com.example.movies2.SeeAllUpcomingScreen
 @Composable
 fun MovieNavHost(
     navController: NavHostController,
+    windowSize: WindowSizeClass,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -67,7 +69,7 @@ fun MovieNavHost(
             )
         }
         composable(route = MoviesDestination.DETAIL) {
-            MovieDetailsScreen()
+            MovieDetailsScreen(windowSize.widthSizeClass)
         }
         composable(route = MoviesDestination.DISCOVER) {
             DiscoverScreen(

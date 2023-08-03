@@ -8,3 +8,5 @@ data class MovieEntity(
     val releaseDate: String,
     val voteAverage: String
     )
+
+data class Movies(val list: List<MovieEntity>, val complete: Boolean, val lastPage: Int)

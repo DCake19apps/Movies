@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
@@ -48,7 +49,8 @@ fun SeeAllNowPlayingScreen(
     MoviesGridList(
         state = nowPlaying,
         onClickRetry = { viewModel.initialize() },
-        onClickItem = onClickItem
+        onClickItem = onClickItem,
+        loadMore = { page -> viewModel.load(page) }
     )
 }
 @Composable
@@ -61,7 +63,8 @@ fun SeeAllUpcomingScreen(
     MoviesGridList(
         state = upcoming,
         onClickRetry = { viewModel.initialize() },
-        onClickItem = onClickItem
+        onClickItem = onClickItem,
+        loadMore = { page -> viewModel.load(page) }
     )
 }
 @Composable
@@ -74,7 +77,8 @@ fun SeeAllTopRatedScreen(
     MoviesGridList(
         state = topRated,
         onClickRetry = { viewModel.initialize() },
-        onClickItem = onClickItem
+        onClickItem = onClickItem,
+        loadMore = { page -> viewModel.load(page) }
     )
 }
 @Composable
@@ -87,25 +91,34 @@ fun SeeAllPopularScreen(
     MoviesGridList(
         state = popular,
         onClickRetry = { viewModel.initialize() },
-        onClickItem = onClickItem
+        onClickItem = onClickItem,
+        loadMore = { page -> viewModel.load(page) }
     )
 }
 @Composable
 fun MoviesGridList(
     state: MovieListState,
     onClickRetry: () -> Unit = {},
-    onClickItem: (id: Int) -> Unit = {}
+    onClickItem: (id: Int) -> Unit = {},
+    loadMore: (page: Int) -> Unit //= {}
 ) {
     when (state) {
         MovieListState.Error -> {
+            println("discover_debug Screen: error")
             ShowAllError(onClickRetry = onClickRetry)
-            Log.v("Upcoming","error")
         }
         MovieListState.Loading -> {
+            println("discover_debug Screen: loading")
             PageLoading()
         }
         is MovieListState.Ready -> {
-            ShowAllMovies(state.movies, onClickItem = onClickItem)
+            println("discover_debug Screen: ready")
+            ShowAllMovies(
+                state.movies,
+                onClickItem = onClickItem,
+                more = !state.complete,
+                loadMore = { loadMore(state.lastPage + 1) }
+            )
         }
     }
 }
@@ -148,8 +161,10 @@ fun ShowAllError(modifier: Modifier = Modifier, onClickRetry: () -> Unit = {}) {
 @Composable
 fun ShowAllMovies(
     movies: List<MovieEntity>,
+    more: Boolean,
     modifier: Modifier = Modifier,
-    onClickItem: (id: Int) -> Unit = {}
+    onClickItem: (id: Int) -> Unit = {},
+    loadMore: () -> Unit //= {}
 ) {
     val configuration = LocalConfiguration.current
 
@@ -162,12 +177,28 @@ fun ShowAllMovies(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier.fillMaxWidth()
     ) {
-        items(movies) {item ->
-            MoviePosterImageItem(
-                item = item,
-                Modifier.size(width = 200.dp, height = 300.dp),
-                onClickItem
-            )
+        items(
+            movies + if (more) listOf(0) else emptyList(),
+            span = { index ->  GridItemSpan(if (index is MovieEntity) 1 else 2) }
+        ) { item ->
+            if (item is MovieEntity) {
+                MoviePosterImageItem(
+                    item = item,
+                    Modifier.size(width = 200.dp, height = 300.dp),
+                    onClickItem
+                )
+            } else {
+                loadMore()
+                Column(modifier = modifier.fillMaxWidth()) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .height(60.dp)
+                            .width(60.dp)
+                            .align(Alignment.CenterHorizontally)
+                    )
+                }
+            }
         }
     }
 }
