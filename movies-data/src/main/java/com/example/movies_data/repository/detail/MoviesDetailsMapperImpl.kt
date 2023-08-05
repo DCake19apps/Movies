@@ -27,7 +27,7 @@ class MoviesDetailsMapperImpl: MoviesDetailsMapper {
             result.revenue?.let { getMonetaryValue(it) } ?: "",
             result.runtime?.toString()?:"",
             result.genres?.map { it?.name?:"" }?: emptyList(),
-            result.spokenLanguages?.map { it?.name?:"" }?: emptyList(),
+            result.spokenLanguages?.map { it?.englishName?:"" }?: emptyList(),
             result.overview?:""
         )
     }

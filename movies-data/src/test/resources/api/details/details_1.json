@@ -1,0 +1,75 @@
+{
+  "adult": false,
+  "backdrop_path": "/backdrop_path.jpg",
+  "belongs_to_collection": {
+    "id": 1,
+    "name": "Collection Name",
+    "poster_path": "/collection_poster_path.jpg",
+    "backdrop_path": "/collection_backdrop_path.jpg"
+  },
+  "budget": 1000000,
+  "genres": [
+    {
+      "id": 18,
+      "name": "Drama"
+    },
+    {
+      "id": 80,
+      "name": "Crime"
+    }
+  ],
+  "homepage": "http://www.title.com/",
+  "id": 1,
+  "imdb_id": "tt0068646",
+  "original_language": "en",
+  "original_title": "Original Title",
+  "overview": "Overview",
+  "popularity": 127.5,
+  "poster_path": "/poster_path.jpg",
+  "production_companies": [
+    {
+      "id": 4,
+      "logo_path": "/logo_path.png",
+      "name": "Production Company 4",
+      "origin_country": "US"
+    },
+    {
+      "id": 5,
+      "logo_path": null,
+      "name": "Production Company 5",
+      "origin_country": "US"
+    }
+  ],
+  "production_countries": [
+    {
+      "iso_3166_1": "US",
+      "name": "United States of America"
+    }
+  ],
+  "release_date": "2000-01-01",
+  "revenue": 10000000,
+  "runtime": 175,
+  "spoken_languages": [
+    {
+      "english_name": "English",
+      "iso_639_1": "en",
+      "name": "English"
+    },
+    {
+      "english_name": "Italian",
+      "iso_639_1": "it",
+      "name": "Italiano"
+    },
+    {
+      "english_name": "Latin",
+      "iso_639_1": "la",
+      "name": "Latin"
+    }
+  ],
+  "status": "Released",
+  "tagline": "Tagline.",
+  "title": "Title",
+  "video": false,
+  "vote_average": 8.5,
+  "vote_count": 10000
+}

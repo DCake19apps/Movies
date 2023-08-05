@@ -61,8 +61,7 @@ class DataModule {
             apiKeyProvider,
             movieDetailsApi,
             cache,
-            MoviesDetailsMapperImpl(),
-            DataRetrieverManager()
+            MoviesDetailsMapperImpl()
         )
     }
 

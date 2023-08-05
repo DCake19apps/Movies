@@ -106,7 +106,7 @@ class DetailsViewModelTest {
        val detailsUseCase = mock<GetMoviesDetailsUseCase> {
            onBlocking { invoke(id) }.thenThrow() //doThrow(Exception())
         }
-        
+
         val viewModel = DetailsViewModel(ssh, detailsUseCase, creditsUseCase)
 
         assert(viewModel.detailsFlow.value == DetailsState.Error)

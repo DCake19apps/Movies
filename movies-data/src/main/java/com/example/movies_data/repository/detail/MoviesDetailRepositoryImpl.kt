@@ -11,15 +11,10 @@ class MoviesDetailRepositoryImpl(
     private val apiKeyProvider: ApiKeyProvider,
     private val api: MovieDetailsApi,
     private val cache: MoviesDetailsCache,
-    private val mapper: MoviesDetailsMapper,
-    private val detailsDataRetrieverManager: DataRetrieverManager<MoviesDetailsEntity>
+    private val mapper: MoviesDetailsMapper
 ): MoviesDetailRepository {
 
     override suspend fun getMovieDetails(id: Int): MoviesDetailsEntity {
-        return detailsDataRetrieverManager.get { retrieve(id) }
-    }
-
-    private suspend fun retrieve(id: Int): MoviesDetailsEntity {
         val cached = cache.get(id)
 
         val moviesDetailsResults = if (cached != null) {
