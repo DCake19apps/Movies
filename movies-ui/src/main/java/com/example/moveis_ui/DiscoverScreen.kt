@@ -22,6 +22,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -235,25 +237,20 @@ fun SelectGenres(add: (genres: Genres) -> Unit, remove: (genres: Genres) -> Unit
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GenreButton(text: String, onChange: (selected: Boolean) -> Unit) {
     var selected by remember { mutableStateOf(false) }
-    val color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
-    val textColor = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondary
-
-    Button(
+    
+    FilterChip(
+        selected = selected,
         onClick = {
             selected = !selected
             onChange(selected)
         },
-        colors = ButtonDefaults.buttonColors(containerColor = color),
+        label = { Text(text = text) },
         modifier = Modifier.height(40.dp)
-    ) {
-        Text(
-            text = text,
-            color = textColor
-        )
-    }
+    )
 }
 
 
