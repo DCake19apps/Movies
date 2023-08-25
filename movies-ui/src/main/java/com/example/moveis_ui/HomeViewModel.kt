@@ -74,6 +74,20 @@ class HomeViewModel @Inject constructor(
                 flow.value = HomeState.Error
             }
         }
+
+//        viewModelScope.launch(CoroutineExceptionHandler {
+//                coroutineContext, throwable ->
+//            flow.value = HomeState.Error
+//        }) {
+//            withContext(Dispatchers.Default) {
+//                val movies = get()
+//                flow.value = HomeState.Ready(movies.list)
+//            }
+//        }.invokeOnCompletion {
+//            if (it !=null && it.cause !is CancellationException) {
+//                flow.value = HomeState.Error
+//            }
+//        }
     }
 
 }
