@@ -76,7 +76,7 @@ fun MovieDetailsScreen(
     overview: DetailsState,
     cast: CastState, crew: CrewState
 ) {
-    val pagerState = rememberPagerState(0)
+    val pagerState = rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f) { 3 }
     val coroutineScope = rememberCoroutineScope()
 
     Column {
@@ -87,7 +87,6 @@ fun MovieDetailsScreen(
             }
         )
         HorizontalPager(
-            pageCount = 3,
             state = pagerState
         ) { pageIndex ->
             Box(

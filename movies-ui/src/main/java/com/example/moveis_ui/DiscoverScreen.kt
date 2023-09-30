@@ -241,7 +241,7 @@ fun SelectGenres(add: (genres: Genres) -> Unit, remove: (genres: Genres) -> Unit
 @Composable
 fun GenreButton(text: String, onChange: (selected: Boolean) -> Unit) {
     var selected by remember { mutableStateOf(false) }
-    
+
     FilterChip(
         selected = selected,
         onClick = {
