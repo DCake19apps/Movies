@@ -24,6 +24,7 @@ import org.junit.Rule
 import org.junit.Test
 import javax.inject.Singleton
 import androidx.test.core.app.launchActivity
+import com.example.movie_domain.list.Movies
 
 @UninstallModules(DataModule::class)
 @HiltAndroidTest
@@ -41,28 +42,29 @@ class UITest {
     }
 
     class TestMoviesRepository: MoviesRepository {
-        override suspend fun getNowShowing(): List<MovieEntity> {
-            return listOf(MovieEntity(1,"Title", "", "", "2000", "7.5"))
+
+        override suspend fun getNowShowing(page: Int): Movies {
+            return Movies(listOf(MovieEntity(1,"Title", "", "", "2000", "7.5")), true, page)
         }
 
-        override suspend fun getUpcoming(): List<MovieEntity> {
-            return emptyList()
+        override suspend fun getUpcoming(page: Int): Movies {
+            return Movies(emptyList(), true, page)
         }
 
-        override suspend fun getTopRated(): List<MovieEntity> {
-            return emptyList()
+        override suspend fun getTopRated(page: Int): Movies {
+            return Movies(emptyList(), true, page)
         }
 
-        override suspend fun getPopular(): List<MovieEntity> {
-            return emptyList()
+        override suspend fun getPopular(page: Int): Movies {
+            return Movies(emptyList(), true, page)
         }
 
-        override suspend fun getDiscoverResults(filter: DiscoverFilter): List<MovieEntity> {
-            return emptyList()
+        override suspend fun getDiscoverResults(filter: DiscoverFilter, page: Int): Movies {
+            return Movies(emptyList(), true, page)
         }
 
-        override suspend fun getSearchResults(term: String): List<MovieEntity> {
-            return emptyList()
+        override suspend fun getSearchResults(term: String, page: Int): Movies {
+            return Movies(emptyList(), true, page)
         }
 
     }

@@ -2,7 +2,6 @@ package com.example.movies_data.repository.detail
 
 import com.example.movie_domain.details.MoviesDetailRepository
 import com.example.movie_domain.details.MoviesDetailsEntity
-import com.example.movies_data.DataRetrieverManager
 import com.example.movies_data.api.MovieDetailsApi
 import com.example.movies_data.apikey.ApiKeyProvider
 import com.example.movies_data.cache.MoviesDetailsCache

@@ -16,7 +16,11 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocalMovies
+import androidx.compose.material.icons.outlined.LocalMovies
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -31,8 +35,10 @@ import androidx.compose.ui.unit.dp
 import com.example.movie_domain.list.MovieEntity
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.testTag
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 
 @Composable
@@ -109,7 +115,9 @@ fun HomeSection(
                 }
                 TextButton(
                     onClick = onClickSeeAll,
-                    modifier = Modifier.padding(2.dp).align(Alignment.End)
+                    modifier = Modifier
+                        .padding(2.dp)
+                        .align(Alignment.End)
                 ) {
                     Text(text = stringResource(id = R.string.see_all))
                 }
@@ -118,13 +126,15 @@ fun HomeSection(
             HomeState.Error -> {
                 Text(
                     text = stringResource(id = R.string.error_loading),
-                    modifier = Modifier.padding(32.dp)
+                    modifier = Modifier
+                        .padding(32.dp)
                         .align(Alignment.CenterHorizontally)
                 )
             }
             HomeState.Loading -> {
                 CircularProgressIndicator(
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier
+                        .padding(16.dp)
                         .height(60.dp)
                         .width(60.dp)
                         .align(Alignment.CenterHorizontally)
@@ -141,12 +151,17 @@ fun MoviePosterImageItem(
     onClick: (id: Int) -> Unit
 ) {
     Surface(modifier.testTag("poster_${item.id}"), RoundedCornerShape(4.dp)) {
-        val painter = rememberAsyncImagePainter(item.posterPath)
+        val painter = rememberAsyncImagePainter(
+            model = item.posterPath,
+            placeholder =  rememberVectorPainter(image = Icons.Outlined.LocalMovies)
+        )
         Image(
             painter = painter,
             contentDescription = null,
             contentScale = ContentScale.Fit,
-            modifier = Modifier.fillMaxWidth().clickable { onClick(item.id) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onClick(item.id) },
         )
     }
 }

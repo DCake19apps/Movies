@@ -26,8 +26,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.res.stringResource
@@ -98,6 +100,7 @@ fun SeeAllPopularScreen(
 @Composable
 fun MoviesGridList(
     state: MovieListState,
+    lazyGridState: LazyGridState = rememberLazyGridState(),
     onClickRetry: () -> Unit = {},
     onClickItem: (id: Int) -> Unit = {},
     loadMore: (page: Int) -> Unit //= {}
@@ -115,6 +118,7 @@ fun MoviesGridList(
             println("discover_debug Screen: ready")
             ShowAllMovies(
                 state.movies,
+                lazyGridState = lazyGridState,
                 onClickItem = onClickItem,
                 more = !state.complete,
                 loadMore = { loadMore(state.lastPage + 1) }
@@ -163,14 +167,12 @@ fun ShowAllMovies(
     movies: List<MovieEntity>,
     more: Boolean,
     modifier: Modifier = Modifier,
+    lazyGridState: LazyGridState,
     onClickItem: (id: Int) -> Unit = {},
-    loadMore: () -> Unit //= {}
+    loadMore: () -> Unit
 ) {
-    val configuration = LocalConfiguration.current
-
-    val screenHeight = configuration.screenHeightDp.dp
-    val screenWidth = configuration.screenWidthDp.dp
     LazyVerticalGrid(
+        state = lazyGridState,
         columns = GridCells.Adaptive(160.dp),
         contentPadding = PaddingValues(vertical = 16.dp, horizontal = 4.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),

@@ -25,8 +25,6 @@ class DataRetrieverManager<T> (private val dispatcher: CoroutineDispatcher = Dis
             channel = Channel()
         }
 
-        channel
-
         if (job?.isActive != true) {
             println("discover_debug Retriever: job is not active")
             job = CoroutineScope(dispatcher).launch(CoroutineExceptionHandler {

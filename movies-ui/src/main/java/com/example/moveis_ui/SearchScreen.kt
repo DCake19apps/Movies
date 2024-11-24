@@ -7,18 +7,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -32,7 +29,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.moveis_ui.MovieListState
 import com.example.moveis_ui.R
 import com.example.moveis_ui.search.SearchViewModel
 
@@ -42,10 +38,11 @@ fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel(),
     onClickItem: (id: Int) -> Unit = {}
 ) {
-
+    val gridState = rememberLazyGridState()
     val searchResults by viewModel.searchFlow.collectAsState()
 
     Column {
+
         Spacer(Modifier.height(16.dp))
         SearchBar(
             Modifier.padding(horizontal = 16.dp)
@@ -53,6 +50,7 @@ fun SearchScreen(
         Spacer(Modifier.height(16.dp))
         MoviesGridList(
             state = searchResults,
+            lazyGridState = gridState,
             onClickRetry = {  },
             onClickItem = onClickItem,
             loadMore = { page -> viewModel.load(page) }

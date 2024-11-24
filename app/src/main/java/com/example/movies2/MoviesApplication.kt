@@ -5,11 +5,12 @@ import dagger.hilt.android.HiltAndroidApp
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import com.example.movies2.util.UnsplashSizingInterceptor
+import kotlinx.coroutines.coroutineScope
 
 @HiltAndroidApp
-class MoviesApplication: Application(){//}, ImageLoaderFactory {
-
-//    override fun newImageLoader(): ImageLoader {
+class MoviesApplication: Application(){
+    //}, ImageLoaderFactory {
+    //    override fun newImageLoader(): ImageLoader {
 //        return ImageLoader.Builder(this)
 //            .components {
 //                add(UnsplashSizingInterceptor)
